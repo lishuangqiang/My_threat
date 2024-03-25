@@ -1,0 +1,46 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: dev
+  main:
+    allow-circular-references: true
+  datasource:
+    druid:
+      driver-class-name: ${threatre.datasource.driver-class-name}
+      url: jdbc:mysql://${threatre.datasource.host}:${threatre.datasource.port}/${threatre.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+      username: ${threatre.datasource.username}
+      password: ${threatre.datasource.password}
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: 123456
+  #??????
+  mail:
+    #??smtp??????
+    # qq???smtp.qq.com          ???465?587
+    # sina    smtp.sina.cn
+    # aliyun  smtp.aliyun.com
+    # 163     smtp.163.com       ???465?994
+    host: smtp.qq.com
+    #?????
+    username: 2354655615@qq.com
+    #????,?????????????????????
+    password: ipsdvrtmwyxpebbc
+    #???465?587
+    port: 587
+    #????????UTF-8
+    default-encoding: UTF-8
+    #????
+    properties:
+      mail:
+        #??SSL ????
+        smtp:
+          ssl:
+            #????????ssl
+            enable: false
+            required: false
+          #??debug??????????????????????????????
+        debug: true
