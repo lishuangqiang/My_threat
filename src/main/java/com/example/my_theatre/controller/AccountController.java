@@ -1,6 +1,8 @@
 package com.example.my_theatre.controller;
 
 
+import com.example.my_theatre.common.BaseResponse;
+import com.example.my_theatre.common.ResultUtils;
 import com.example.my_theatre.service.impl.EmailCodeServiceImpl;
 
 
@@ -18,8 +20,9 @@ public class AccountController {
      * 发送邮箱验证码
      */
     @PostMapping("/sendEmailCode")
-    public void  sendEmailCode(@RequestParam String email) {
-    emailCodeService.sendEmailCode(email);
+    public BaseResponse<String> sendEmailCode(@RequestParam String email) {
+       emailCodeService.sendEmailCode(email);
+       return ResultUtils.success("验证码发送成功");
 
     }
 
