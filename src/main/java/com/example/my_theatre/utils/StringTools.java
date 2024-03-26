@@ -2,7 +2,8 @@ package com.example.my_theatre.utils;
 
 import com.example.my_theatre.entity.constants.Constants;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.RandomStringUtils;public class StringTools {
+import org.apache.commons.lang3.RandomStringUtils;
+public class StringTools {
 
     /**
      * md5加密
