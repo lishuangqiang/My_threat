@@ -47,4 +47,8 @@ public class StringTools {
         return RandomStringUtils.random(count, false, true);
     }
 
+
+    public static void main(String[] args) {
+        System.out.println(encodeByMD5("123456"));
+    }
 }

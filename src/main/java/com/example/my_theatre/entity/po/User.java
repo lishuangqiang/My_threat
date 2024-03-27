@@ -1,5 +1,6 @@
 package com.example.my_theatre.entity.po;
 
+
 import lombok.Data;
 
 
@@ -51,6 +52,14 @@ public class User  implements Serializable {
      * 用户当前借书数量
      */
     private int nowBBook;
+
+    /**
+     * 生成当前用户token
+     * @param user
+     * @return
+     */
+
+
 
     private static final long serialVersionUID = 1L;
 }

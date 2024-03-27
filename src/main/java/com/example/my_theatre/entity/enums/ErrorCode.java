@@ -14,8 +14,11 @@ public enum ErrorCode {
     NOT_FOUND_ERROR(40400, "请求数据不存在"),
     FORBIDDEN_ERROR(40300, "禁止访问"),
     ACCOUNT_ERROR(50000, "邮箱账号格式异常"),
-    OPERATION_ERROR(50001, "邮箱已经注册"),
-    SYSTEM_ERROR(50002,"内部出错");
+    EMAIL_ERROR(50001, "邮箱已经注册"),
+    SYSTEM_ERROR(50002,"内部出错"),
+    CODE_ERROR(50003,"验证码错误或过期"),
+    PASSWPRD_ERROR(50004,"密码错误"),
+    STATUS_ERROR(50005,"用户已被禁用");
 
 
     /**

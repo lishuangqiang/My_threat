@@ -45,3 +45,20 @@ spring:
           #??debug??????????????????????????????
         debug: false
 
+sky:
+  jwt:
+    #设置管理端
+    # 设置jwt签名加密时使用的秘钥
+    admin-secret-key: ineatcow
+    # 设置jwt过期时间
+    admin-ttl: 720000000000
+    # 设置前端传递过来的令牌名称
+    admin-token-name: token
+
+    #设置用户端
+    # 设置jwt签名加密时使用的秘钥
+    user-secret-key: ineatcow
+    # 设置jwt过期时间
+    user-ttl: 720000000000
+    # 设置前端传递过来的令牌名称
+    user-token-name: Authorization

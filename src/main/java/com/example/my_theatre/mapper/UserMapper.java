@@ -15,6 +15,8 @@ public interface UserMapper extends BaseMapper<User> {
     void register(User user);
 
     void deleteUserByEmail(String email);
+
+    void updatePasswordByemail(String email, String password);
 }
 
 

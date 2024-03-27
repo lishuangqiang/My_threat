@@ -24,4 +24,8 @@ public class VerifyRegexUtils {
             return false;
         }
     }
+
+    public static void main(String[] args) {
+        System.out.println(VerifyEmail("2354655615@qq.com"));
+    }
 }
