@@ -56,6 +56,7 @@ public class JwtTokenUserInterceptor implements HandlerInterceptor {
         } catch (Exception ex) {
             //4、不通过，响应401状态码
             log.info("jwt令牌获取失败");
+            //返回状态码，前端获取到该状态码之后跳转到登录界面。
             response.setStatus(401);
             return false;
         }

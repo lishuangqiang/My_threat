@@ -62,6 +62,9 @@ public class UserAccountServiceImpl implements UserAccountService {
             redisUtil.set(EmailConstant.forget + email, code, 60 * 5);
         } else if (type.equals(EmailConstant.logout)) {
             redisUtil.set(EmailConstant.logout + email, code, 60 * 5);
+        } else if (type.equals(EmailConstant.login)) {
+            redisUtil.set(EmailConstant.login + email, code, 60 * 5);
+
         }
 
     }
@@ -105,6 +108,15 @@ public class UserAccountServiceImpl implements UserAccountService {
                 //发送邮件
                 javaMailSender.send(mimeMessageHelper.getMimeMessage());
                 System.out.println("发送邮件成功：" + EmailConstant.SendMiler + "===>" + toEmail);
+            } else if (type.equals(EmailConstant.login)) {
+                //邮件内容
+                mimeMessageHelper.setText(EmailConstant.login_text + code + EmailConstant.tail);
+                //邮件发送时间
+                mimeMessageHelper.setSentDate(new Date());
+                //发送邮件
+                javaMailSender.send(mimeMessageHelper.getMimeMessage());
+                System.out.println("发送邮件成功：" + EmailConstant.SendMiler + "===>" + toEmail);
+
             }
 
         } catch (MessagingException e) {
@@ -157,6 +169,7 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     /**
      * 用户注销
+     *
      * @param email
      * @param password
      * @param code
@@ -234,6 +247,39 @@ public class UserAccountServiceImpl implements UserAccountService {
         redisUtil.del(EmailConstant.forget + email);
         //更新用户密码
         userMapper.updatePasswordByemail(email, password);
+
+    }
+
+    @Override
+    public UserinfoVo loginByCode(String email, String code) throws BusinessException{
+        //校验用户邮箱
+
+
+
+        //校验验证码
+        String rightcode = (String) redisUtil.get(EmailConstant.login + email);
+        if(!code.equals(rightcode))
+        {
+            throw new BusinessException(ErrorCode.CODE_ERROR, "验证码错误或失效,请重新输入或获取");
+        }
+
+        User user = userMapper.findUserByemail(email);
+
+        //写入token
+        //登录成功后，生成jwt令牌
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(JwtClaimsConstant.USER_ACCOUNT, user.getUserAccount());
+        String token = JwtUtil.createJWT(
+                jwtProperties.getAdminSecretKey(),
+                jwtProperties.getAdminTtl(),
+                claims);
+        //包装返回给前端的用户实体
+        UserinfoVo userinfoVo = new UserinfoVo();
+        userinfoVo.setEmail(user.getUserAccount());
+        userinfoVo.setUserName(user.getUserName());
+        userinfoVo.setToken(token);
+
+        return userinfoVo;
 
     }
 

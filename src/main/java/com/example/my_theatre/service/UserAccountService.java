@@ -16,4 +16,6 @@ public interface UserAccountService {
     UserinfoVo login(String email, String password)throws BusinessException;
 
     void forgetPassword(String account, String password,String code) throws BusinessException;
+
+    UserinfoVo loginByCode(String email, String code);
 }

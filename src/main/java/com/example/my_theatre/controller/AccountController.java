@@ -1,22 +1,26 @@
 package com.example.my_theatre.controller;
 
 
+import com.example.my_theatre.annotation.VerifyParam;
 import com.example.my_theatre.common.BaseResponse;
 import com.example.my_theatre.common.ResultUtils;
 import com.example.my_theatre.entity.constants.EmailConstant;
 import com.example.my_theatre.entity.dto.Userinfo;
 import com.example.my_theatre.entity.enums.ErrorCode;
+import com.example.my_theatre.entity.enums.VerifyRegexEnum;
 import com.example.my_theatre.entity.vo.UserinfoVo;
 import com.example.my_theatre.exception.BusinessException;
 import com.example.my_theatre.service.impl.UserAccountServiceImpl;
 import com.example.my_theatre.utils.VerifyRegexUtils;
 import jakarta.mail.MessagingException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Map;
 
 @RestController
+@Slf4j
 @RequestMapping("/user/account")
 public class AccountController {
     @Resource
@@ -27,7 +31,7 @@ public class AccountController {
     @PostMapping("/sendEmailCode")
     public BaseResponse<String> sendEmailCode(@RequestParam String email,String type) {
         //对邮箱进行正则表达式判断：
-
+        log.info("当前用户正在 生成验证码，邮箱："+ email + ",验证码类型："+type);
         if(!VerifyRegexUtils.VerifyEmail(email))
         {
             return ResultUtils.error(ErrorCode.SYSTEM_ERROR, "邮箱格式不正确，请检查输入格式");
@@ -44,11 +48,15 @@ public class AccountController {
      * 用户注册
      */
     @PostMapping("/register")
+    @VerifyParam(required = true,regexAccount = VerifyRegexEnum.EMAIL,regexPassword = VerifyRegexEnum.PASSWORD,
+                                                                            regexName = VerifyRegexEnum.USER_NAME)
     public BaseResponse<String> register(@RequestBody Userinfo user)
     {
+        log.info("当前用户正在注册， 账户名：{}"+user.getEmail());
         //获取用户名称，邮箱，密码和验证码
         String username = user.getUserName();
         String email = user.getEmail();
+
         String password = user.getPassword();
         String code = user.getCode();
 
@@ -74,6 +82,7 @@ public class AccountController {
     @PostMapping("/delete")
     public BaseResponse<String> delete(@RequestBody Userinfo user)
     {
+        log.info("当前用户正在注销， 账户名：{}"+user.getEmail());
         //获取用户名称，邮箱，密码和验证码
 
         String email = user.getEmail();
@@ -94,6 +103,7 @@ public class AccountController {
      */
     @PostMapping("/login")
     public BaseResponse<UserinfoVo> login(@RequestBody Userinfo user) {
+        log.info("当前用户通过密码正在登录， 账户名：{}"+user.getEmail());
         //获取用户账户和密码
         String email = user.getEmail();
         String password = user.getPassword();
@@ -118,6 +128,7 @@ public class AccountController {
      */
     @PostMapping("/forgetPassword")
     public BaseResponse<String> forgetPassword(@RequestBody Userinfo user) {
+        log.info("当前用户正在更换密码， 账户名：{}"+user.getEmail());
        String account= user.getEmail();
        String code = user.getCode();
 
@@ -133,6 +144,25 @@ public class AccountController {
        }
 
        return ResultUtils.success("更换成功");
+    }
+    /**
+     * 通过验证码登录
+     */
+    @PostMapping("/loginByCode")
+    public BaseResponse<UserinfoVo> loginByCode(@RequestBody Userinfo user) {
+        log.info("当前用户正在通过验证码登录："+ user.getEmail());
+        String userAccount= user.getEmail();
+        String code = user.getCode();
+        UserinfoVo userinfoVo;
+        try {
+            userinfoVo = userAccountService.loginByCode(userAccount,code);
+        } catch (BusinessException e) {
+            return ResultUtils.error(e.getCode(), e.getMessage());
+        }
+        return ResultUtils.success(userinfoVo);
+
+        //todo
+        //创建切面，来对参数进行拦截校验
     }
 
 }
