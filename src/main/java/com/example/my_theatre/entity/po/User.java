@@ -43,15 +43,7 @@ public class User  implements Serializable {
      */
     private int userStatus;
 
-    /**
-     * 用户最大借书数量
-     */
-    private int maxBBook;
 
-    /**
-     * 用户当前借书数量
-     */
-    private int nowBBook;
 
     /**
      * 生成当前用户token

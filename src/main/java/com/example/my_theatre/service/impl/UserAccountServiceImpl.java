@@ -157,8 +157,7 @@ public class UserAccountServiceImpl implements UserAccountService {
             user.setUserAccount(Email);
             user.setUserPassword(password);
             user.setUserStatus(UserConstants.User_start);
-            user.setMaxBBook(10);
-            user.setNowBBook(0);
+
             user.setCreateTime(new Date());
             user.setUpdateTime(new Date());
             userMapper.register(user);

@@ -6,7 +6,7 @@
     <insert id="register">
         INSERT INTO user_table(
 
-           user_name, user_account, user_password, create_time, update_time, user_status, max_b_book, now_b_book
+           user_name, user_account, user_password, create_time, update_time, user_status
         )
             VALUES(
 
@@ -16,9 +16,8 @@
 
                       #{createTime},
                       #{updateTime},
-                      #{userStatus},
-                      #{maxBBook},
-                      #{nowBBook}
+                      #{userStatus}
+
                   )
 
     </insert>

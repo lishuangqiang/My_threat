@@ -1,5 +1,6 @@
 package com.example.my_theatre.entity.enums;
 
+
 public enum VerifyRegexEnum {
     NO("", "不校验"),
     PASSWORD("^\\w+$", "由数字、26个英文字母或者下划线组成的字符串"),

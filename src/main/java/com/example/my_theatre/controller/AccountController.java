@@ -29,6 +29,7 @@ public class AccountController {
      * 发送邮箱验证码
      */
     @PostMapping("/sendEmailCode")
+    @VerifyParam(required = true,regexAccount = VerifyRegexEnum.EMAIL)
     public BaseResponse<String> sendEmailCode(@RequestParam String email,String type) {
         //对邮箱进行正则表达式判断：
         log.info("当前用户正在 生成验证码，邮箱："+ email + ",验证码类型："+type);
@@ -48,8 +49,7 @@ public class AccountController {
      * 用户注册
      */
     @PostMapping("/register")
-    @VerifyParam(required = true,regexAccount = VerifyRegexEnum.EMAIL,regexPassword = VerifyRegexEnum.PASSWORD,
-                                                                            regexName = VerifyRegexEnum.USER_NAME)
+    @VerifyParam(required = true,regexAccount = VerifyRegexEnum.EMAIL,regexPassword = VerifyRegexEnum.PASSWORD,regexName = VerifyRegexEnum.USER_NAME)
     public BaseResponse<String> register(@RequestBody Userinfo user)
     {
         log.info("当前用户正在注册， 账户名：{}"+user.getEmail());
@@ -59,16 +59,11 @@ public class AccountController {
 
         String password = user.getPassword();
         String code = user.getCode();
-
-        // 对用户名进行正则表达式判断：
-
-        if (!VerifyRegexUtils.VerifyName(username)) {
-            return ResultUtils.error(ErrorCode.SYSTEM_ERROR, "用户名格式不正确，请检查输入格式");
-        }
         try
         {
             userAccountService.register( email,username, password, code);
-        }catch (BusinessException e)
+        }
+        catch (BusinessException e)
         {
             return ResultUtils.error(e.getCode(),e.getMessage());
         }
@@ -80,6 +75,7 @@ public class AccountController {
      *用户注销
      */
     @PostMapping("/delete")
+    @VerifyParam(required = true, regexAccount = VerifyRegexEnum.EMAIL,regexName = VerifyRegexEnum.USER_NAME,regexPassword = VerifyRegexEnum.PASSWORD)
     public BaseResponse<String> delete(@RequestBody Userinfo user)
     {
         log.info("当前用户正在注销， 账户名：{}"+user.getEmail());
@@ -102,6 +98,7 @@ public class AccountController {
      * 用户登录
      */
     @PostMapping("/login")
+    @VerifyParam(required = true, regexAccount = VerifyRegexEnum.EMAIL,regexPassword = VerifyRegexEnum.PASSWORD)
     public BaseResponse<UserinfoVo> login(@RequestBody Userinfo user) {
         log.info("当前用户通过密码正在登录， 账户名：{}"+user.getEmail());
         //获取用户账户和密码
@@ -127,6 +124,7 @@ public class AccountController {
      * 重置密码
      */
     @PostMapping("/forgetPassword")
+    @VerifyParam(required = true, regexAccount = VerifyRegexEnum.EMAIL)
     public BaseResponse<String> forgetPassword(@RequestBody Userinfo user) {
         log.info("当前用户正在更换密码， 账户名：{}"+user.getEmail());
        String account= user.getEmail();
@@ -149,6 +147,7 @@ public class AccountController {
      * 通过验证码登录
      */
     @PostMapping("/loginByCode")
+    @VerifyParam(required = true, regexAccount = VerifyRegexEnum.EMAIL)
     public BaseResponse<UserinfoVo> loginByCode(@RequestBody Userinfo user) {
         log.info("当前用户正在通过验证码登录："+ user.getEmail());
         String userAccount= user.getEmail();
@@ -161,8 +160,6 @@ public class AccountController {
         }
         return ResultUtils.success(userinfoVo);
 
-        //todo
-        //创建切面，来对参数进行拦截校验
     }
 
 }
