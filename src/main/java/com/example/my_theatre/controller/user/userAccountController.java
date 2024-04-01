@@ -1,28 +1,25 @@
-package com.example.my_theatre.controller;
+package com.example.my_theatre.controller.user;
 
 
 import com.example.my_theatre.annotation.VerifyParam;
 import com.example.my_theatre.common.BaseResponse;
 import com.example.my_theatre.common.ResultUtils;
-import com.example.my_theatre.entity.constants.EmailConstant;
-import com.example.my_theatre.entity.dto.Userinfo;
+import com.example.my_theatre.entity.dto.UserDto;
 import com.example.my_theatre.entity.enums.ErrorCode;
 import com.example.my_theatre.entity.enums.VerifyRegexEnum;
-import com.example.my_theatre.entity.vo.UserinfoVo;
+import com.example.my_theatre.entity.vo.UserVo;
 import com.example.my_theatre.exception.BusinessException;
 import com.example.my_theatre.service.impl.UserAccountServiceImpl;
 import com.example.my_theatre.utils.VerifyRegexUtils;
-import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.Map;
 
 @RestController
 @Slf4j
 @RequestMapping("/user/account")
-public class AccountController {
+public class userAccountController {
     @Resource
     UserAccountServiceImpl userAccountService;
     /**
@@ -50,7 +47,7 @@ public class AccountController {
      */
     @PostMapping("/register")
     @VerifyParam(required = true,regexAccount = VerifyRegexEnum.EMAIL,regexPassword = VerifyRegexEnum.PASSWORD,regexName = VerifyRegexEnum.USER_NAME)
-    public BaseResponse<String> register(@RequestBody Userinfo user)
+    public BaseResponse<String> register(@RequestBody UserDto user)
     {
         log.info("当前用户正在注册， 账户名：{}"+user.getEmail());
         //获取用户名称，邮箱，密码和验证码
@@ -76,7 +73,7 @@ public class AccountController {
      */
     @PostMapping("/delete")
     @VerifyParam(required = true, regexAccount = VerifyRegexEnum.EMAIL,regexName = VerifyRegexEnum.USER_NAME,regexPassword = VerifyRegexEnum.PASSWORD)
-    public BaseResponse<String> delete(@RequestBody Userinfo user)
+    public BaseResponse<String> delete(@RequestBody UserDto user)
     {
         log.info("当前用户正在注销， 账户名：{}"+user.getEmail());
         //获取用户名称，邮箱，密码和验证码
@@ -99,7 +96,7 @@ public class AccountController {
      */
     @PostMapping("/login")
     @VerifyParam(required = true, regexAccount = VerifyRegexEnum.EMAIL,regexPassword = VerifyRegexEnum.PASSWORD)
-    public BaseResponse<UserinfoVo> login(@RequestBody Userinfo user) {
+    public BaseResponse<UserVo> login(@RequestBody UserDto user) {
         log.info("当前用户通过密码正在登录， 账户名：{}"+user.getEmail());
         //获取用户账户和密码
         String email = user.getEmail();
@@ -109,7 +106,7 @@ public class AccountController {
         if (!VerifyRegexUtils.VerifyEmail(email)) {
             return ResultUtils.error(ErrorCode.SYSTEM_ERROR, "邮箱格式不正确，请检查输入格式");
         }
-        UserinfoVo userinfoVo;
+        UserVo userinfoVo;
         try {
             userinfoVo = userAccountService.login(email, password);
 
@@ -125,7 +122,7 @@ public class AccountController {
      */
     @PostMapping("/forgetPassword")
     @VerifyParam(required = true, regexAccount = VerifyRegexEnum.EMAIL)
-    public BaseResponse<String> forgetPassword(@RequestBody Userinfo user) {
+    public BaseResponse<String> forgetPassword(@RequestBody UserDto user) {
         log.info("当前用户正在更换密码， 账户名：{}"+user.getEmail());
        String account= user.getEmail();
        String code = user.getCode();
@@ -148,11 +145,11 @@ public class AccountController {
      */
     @PostMapping("/loginByCode")
     @VerifyParam(required = true, regexAccount = VerifyRegexEnum.EMAIL)
-    public BaseResponse<UserinfoVo> loginByCode(@RequestBody Userinfo user) {
+    public BaseResponse<UserVo> loginByCode(@RequestBody UserDto user) {
         log.info("当前用户正在通过验证码登录："+ user.getEmail());
         String userAccount= user.getEmail();
         String code = user.getCode();
-        UserinfoVo userinfoVo;
+        UserVo userinfoVo;
         try {
             userinfoVo = userAccountService.loginByCode(userAccount,code);
         } catch (BusinessException e) {

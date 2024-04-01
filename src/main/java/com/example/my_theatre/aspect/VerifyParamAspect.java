@@ -2,22 +2,15 @@ package com.example.my_theatre.aspect;
 
 
 import com.example.my_theatre.annotation.VerifyParam;
-import com.example.my_theatre.entity.dto.Userinfo;
+import com.example.my_theatre.entity.dto.UserDto;
 import com.example.my_theatre.entity.enums.VerifyRegexEnum;
 import com.example.my_theatre.utils.VerifyRegexUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
-import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.time.LocalDateTime;
-import java.util.regex.Pattern;
 
 /*
  * 自定义切面，实现参数的校验
@@ -46,8 +39,8 @@ public class VerifyParamAspect {
         String userName = null;
         String email=null;
         String password=null;
-        if (args.length > 0 && args[0] instanceof Userinfo) {
-            Userinfo userinfo = (Userinfo) args[0];
+        if (args.length > 0 && args[0] instanceof UserDto) {
+            UserDto userinfo = (UserDto) args[0];
 
             email = userinfo.getEmail();
             userName = userinfo.getUserName();
@@ -73,6 +66,13 @@ public class VerifyParamAspect {
         if (verifyParam.regexPassword() != VerifyRegexEnum.NO && password instanceof String) {
 
             if (!VerifyRegexUtils.VerifyPassword(password)) {
+                throw new IllegalArgumentException("密码参数校验失败");
+            }
+        }
+        // 校验账户
+        if (verifyParam.regexAccount() != VerifyRegexEnum.NO && password instanceof String) {
+
+            if (!VerifyRegexUtils.VerifyAccount(password)) {
                 throw new IllegalArgumentException("密码参数校验失败");
             }
         }

@@ -3,7 +3,10 @@ package com.example.my_theatre.interceptor;
 
 import com.example.my_theatre.context.BaseContext;
 import com.example.my_theatre.entity.constants.JwtClaimsConstant;
+import com.example.my_theatre.entity.po.Admin;
+import com.example.my_theatre.mapper.AdminMapper;
 import com.example.my_theatre.properties.JwtProperties;
+import com.example.my_theatre.service.AdminAccountService;
 import com.example.my_theatre.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,10 +22,13 @@ import org.springframework.web.servlet.HandlerInterceptor;
  */
 @Component
 @Slf4j
-public class JwtTokenUserInterceptor implements HandlerInterceptor {
+public class JwtTokenAdminInterceptor implements HandlerInterceptor {
 
     @Autowired
     private JwtProperties jwtProperties;
+
+    @Autowired
+    private AdminMapper adminMapper;
 
     /**
      * 校验jwt
@@ -47,15 +53,25 @@ public class JwtTokenUserInterceptor implements HandlerInterceptor {
         try {
             log.info("jwt校验:{}", token);
             Claims claims = JwtUtil.parseJWT(jwtProperties.getAdminSecretKey(), token);
-            String  userId = (String) claims.get(JwtClaimsConstant.ADMIN_ACCOUNT);
-            log.info("当前用户账号id：{}", userId);
+            String  adminId = (String) claims.get(JwtClaimsConstant.ADMIN_ACCOUNT);
+            log.info("当前用户账号id：{}", adminId);
             //使用ThreadLocal来存储empID，使得和这个变量在同线程下的其他包可以使用
+            //类型转换问题（数据库字段问题）
+            //todo(管理员令牌校验，需要检查当前登录的账号是否是管理员)
+            Admin admin = adminMapper.getByaccount(adminId);
+            if(admin==null)
+            {
+                log.info("普通用户越权操作");
+                //返回状态码，前端获取到该状态码之后跳转到登录界面。
+                response.setStatus(401);
+                return false;
+            }
 
-            BaseContext.setCurrentId(Long.valueOf(userId));
+            BaseContext.setCurrentId(Long.valueOf(adminId));
             //3、通过，放行
             return true;
-        } catch (Exception ex) {
             //4、不通过，响应401状态码
+        } catch (Exception ex) {
             log.info("jwt令牌获取失败");
             //返回状态码，前端获取到该状态码之后跳转到登录界面。
             response.setStatus(401);

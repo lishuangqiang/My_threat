@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.my_theatre.mapper.FilmMapper">
+
+    <insert id="addfilm">
+    insert into my_threate.movie_table(movie_id, movie_name, leading_actor, movie_picture,
+     movie_time, number_ticket, movie_country, movie_type, movie_year)
+    VALUES(
+           #{movieId},
+           #{movieName},
+           #{leadingActor},
+           #{moviePicture},
+           #{movieTime},
+           #{numberTicket},
+           #{movieCountry},
+           #{movieYear}
+          )
+
+    </insert>
+</mapper>

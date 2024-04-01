@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.my_theatre.mapper.AdminMapper">
+    <insert id="addAdmin">
+        insert into my_threate.admin_table(admin_name, admin_account, admin_password)
+
+        VALUES(
+                #{adminName},
+               #{adminAccount},
+               #{adminPassword}
+              )
+
+    </insert>
+    <delete id="delAdmin">
+        delete from my_threate.admin_table where admin_account='${adminAccount}'
+    </delete>
+
+    <select id="selectByAccount" resultType="com.example.my_theatre.entity.po.Admin">
+        select * from my_threate.admin_table where admin_account = '${account}'
+    </select>
+    <select id="findall" resultType="com.example.my_theatre.entity.po.Admin">
+        select * from my_threate.admin_table
+    </select>
+    <select id="getByaccount" resultType="com.example.my_theatre.entity.po.Admin">
+        select  * from my_threate.admin_table where admin_account =${adminId}
+    </select>
+</mapper>

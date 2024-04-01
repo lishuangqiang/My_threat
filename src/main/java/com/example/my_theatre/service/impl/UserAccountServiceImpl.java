@@ -6,10 +6,9 @@ import com.example.my_theatre.entity.constants.EmailConstant;
 
 import com.example.my_theatre.entity.constants.JwtClaimsConstant;
 import com.example.my_theatre.entity.constants.UserConstants;
-import com.example.my_theatre.entity.dto.Userinfo;
 import com.example.my_theatre.entity.enums.ErrorCode;
 import com.example.my_theatre.entity.po.User;
-import com.example.my_theatre.entity.vo.UserinfoVo;
+import com.example.my_theatre.entity.vo.UserVo;
 import com.example.my_theatre.exception.BusinessException;
 import com.example.my_theatre.mapper.UserMapper;
 import com.example.my_theatre.properties.JwtProperties;
@@ -191,14 +190,29 @@ public class UserAccountServiceImpl implements UserAccountService {
         userMapper.deleteUserByEmail(email);
         //todo
         //被拦截器拦截之后，返回错误界面方便前端进行跳转
+
     }
 
+    /**
+     * 用户登录
+     * @param email
+     * @param password
+     * @return
+     * @throws BusinessException
+     */
+
     @Override
-    public UserinfoVo login(String email, String password) throws BusinessException {
+    public UserVo login(String email, String password) throws BusinessException {
         //对密码字符串进行MD5加密
         String userintoPassword = StringTools.encodeByMD5(password);
-        //根据用户邮箱搜索用户密码
+        //根据用户邮箱搜索用户
         User userinfo = userMapper.findUserByemail(email);
+
+        //校验密码：
+        if(userinfo.getUserPassword().equals(userintoPassword))
+        {
+            throw new BusinessException(ErrorCode.PASSWPRD_ERROR, "用户密码不正确，请重新输入或获取");
+        }
 
         //校验用户状态
         if (userinfo.getUserStatus() == UserConstants.User_prohibit) {
@@ -220,7 +234,7 @@ public class UserAccountServiceImpl implements UserAccountService {
 
 
         //员工登录成功之后向前端返回的数据，我们采用自定义结构封装
-        UserinfoVo userLoginVO = new UserinfoVo();
+        UserVo userLoginVO = new UserVo();
 
         userLoginVO.setEmail(userinfo.getUserAccount());
         userLoginVO.setToken(token);
@@ -249,8 +263,16 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     }
 
+    /**
+     * 用户通过验证码登录
+     * @param email
+     * @param code
+     * @return
+     * @throws BusinessException
+     */
+
     @Override
-    public UserinfoVo loginByCode(String email, String code) throws BusinessException{
+    public UserVo loginByCode(String email, String code) throws BusinessException{
         //校验用户邮箱
 
 
@@ -273,7 +295,7 @@ public class UserAccountServiceImpl implements UserAccountService {
                 jwtProperties.getAdminTtl(),
                 claims);
         //包装返回给前端的用户实体
-        UserinfoVo userinfoVo = new UserinfoVo();
+        UserVo userinfoVo = new UserVo();
         userinfoVo.setEmail(user.getUserAccount());
         userinfoVo.setUserName(user.getUserName());
         userinfoVo.setToken(token);

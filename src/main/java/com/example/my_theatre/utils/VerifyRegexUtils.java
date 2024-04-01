@@ -10,6 +10,8 @@ public class VerifyRegexUtils {
     //用户密码：
     static final String REGEX_PASSWORD = "^\\w+$";
 
+    static final String REGEX_ACCOUNT = "^\\w+$";
+
     //对邮箱进行正则表达式判断：
     public static final Boolean VerifyEmail(String email) {
         if (email.matches(REGEX_EMAIL)) {
@@ -28,8 +30,18 @@ public class VerifyRegexUtils {
         }
     }
 
+    //对密码进行正则表达式判断
     public static final Boolean VerifyPassword(String name) {
-        if (name.matches(REGEX_NAME)) {
+        if (name.matches(REGEX_PASSWORD)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //对密码进行正则表达式判断
+    public static final Boolean VerifyAccount(String name) {
+        if (name.matches(REGEX_ACCOUNT)) {
             return true;
         } else {
             return false;

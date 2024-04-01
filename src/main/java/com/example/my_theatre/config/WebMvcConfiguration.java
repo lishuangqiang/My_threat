@@ -1,6 +1,7 @@
 package com.example.my_theatre.config;
 
 
+import com.example.my_theatre.interceptor.JwtTokenAdminInterceptor;
 import com.example.my_theatre.interceptor.JwtTokenUserInterceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -23,6 +24,9 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
     @Autowired
     private JwtTokenUserInterceptor jwtTokenUserInterceptor;
 
+    @Autowired
+    private JwtTokenAdminInterceptor jwtTokenAdminInterceptor;
+
 
     /**
      * 注册自定义拦截器
@@ -39,6 +43,10 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
                 .excludePathPatterns("/user/account/forgetPassword")
                 .excludePathPatterns("/user/account//loginByCode")
                 .excludePathPatterns("/user/account/loginByCode");
+
+        registry.addInterceptor(jwtTokenAdminInterceptor)
+                .addPathPatterns("/admin/**")
+                .excludePathPatterns("/admin/account/login");
 
 
     }

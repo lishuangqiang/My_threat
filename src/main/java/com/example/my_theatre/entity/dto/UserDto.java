@@ -10,7 +10,7 @@ import java.io.Serializable;
 
  */
 @Data
-public class Userinfo implements Serializable {
+public class UserDto implements Serializable {
 
 
     /**

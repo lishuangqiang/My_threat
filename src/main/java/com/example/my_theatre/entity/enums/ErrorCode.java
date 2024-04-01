@@ -18,7 +18,10 @@ public enum ErrorCode {
     SYSTEM_ERROR(50002,"内部出错"),
     CODE_ERROR(50003,"验证码错误或过期"),
     PASSWPRD_ERROR(50004,"密码错误"),
-    STATUS_ERROR(50005,"用户已被禁用");
+    STATUS_ERROR(50005,"用户已被禁用"),
+    SERVER_ERROR(50006,"添加管理员失败"),
+    NO_MAIN_OPERATION(50007,"非法权限操作" ),
+    FILM_FAIL(50008,"上传电影失败");
 
 
     /**

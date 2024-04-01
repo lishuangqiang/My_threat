@@ -1,7 +1,6 @@
 package com.example.my_theatre.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.example.my_theatre.entity.dto.Userinfo;
 import com.example.my_theatre.entity.po.User;
 
 
