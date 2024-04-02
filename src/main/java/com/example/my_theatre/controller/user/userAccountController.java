@@ -26,7 +26,7 @@ public class userAccountController {
      * 发送邮箱验证码
      */
     @PostMapping("/sendEmailCode")
-    @VerifyParam(required = true,regexAccount = VerifyRegexEnum.EMAIL)
+   // @VerifyParam(required = true,regexAccount = VerifyRegexEnum.EMAIL)
     public BaseResponse<String> sendEmailCode(@RequestParam String email,String type) {
         //对邮箱进行正则表达式判断：
         log.info("当前用户正在 生成验证码，邮箱："+ email + ",验证码类型："+type);
