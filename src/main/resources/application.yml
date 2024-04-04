@@ -72,7 +72,15 @@ hwyun:
     bucketName: my.threat
     parentDir: my.threat.QRcode
 
-=
+    # 阿里云oss
+aliyun:
+      oss:
+        endpoint: oss-cn-beijing.aliyuncs.com
+        accessKeyId: LTAI5tH7rfhrJwMTg5sijkSA
+        accessKeySecret: HXRJABab3DAGgUtVDzFK7XBPw0NHdA
+        bucketName: hmleadnews235
+
+
 
 
 

@@ -5,16 +5,16 @@
 <mapper namespace="com.example.my_theatre.mapper.FilmMapper">
 
     <insert id="addfilm">
-    insert into my_threate.movie_table(movie_id, movie_name, leading_actor, movie_picture,
+    insert into my_threate.movie_table( movie_name, leading_actor,movie_picture,
      movie_time, number_ticket, movie_country, movie_type, movie_year)
     VALUES(
-           #{movieId},
            #{movieName},
            #{leadingActor},
-           #{moviePicture},
+           #{filePath},
            #{movieTime},
-           #{numberTicket},
+           #{movieTicket},
            #{movieCountry},
+           #{movieType},
            #{movieYear}
           )
 

@@ -78,6 +78,8 @@ public class UserAccountServiceImpl implements UserAccountService {
             mimeMessageHelper.setFrom(EmailConstant.SendMiler);
             //邮件收信人
             mimeMessageHelper.setTo(toEmail);
+            //邮箱头部
+            mimeMessageHelper.setSubject(EmailConstant.subjective);
             //邮件主题
             mimeMessageHelper.setText(EmailConstant.subjective);
             //判断类型

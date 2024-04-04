@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface FilmMapper extends BaseMapper<Film> {
 
-    Boolean addfilm(String filmName, String leadingActor, String moviePicture, String moiveType, String movieYear, String moiveCountry, int movieTime);
+    Boolean addfilm(String movieName, String leadingActor,String filePath, String movieType, String movieYear, String movieCountry, int movieTime,int movieTicket);
 }

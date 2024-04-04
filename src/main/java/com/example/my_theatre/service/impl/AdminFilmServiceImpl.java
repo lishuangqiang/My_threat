@@ -6,8 +6,10 @@ import com.example.my_theatre.entity.enums.ErrorCode;
 import com.example.my_theatre.exception.BusinessException;
 import com.example.my_theatre.mapper.FilmMapper;
 import com.example.my_theatre.service.AdminFilmService;
+import com.example.my_theatre.utils.AliOssUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 
@@ -17,19 +19,23 @@ public class AdminFilmServiceImpl implements AdminFilmService {
     private FilmMapper filmMapper;
 
 
+    @Resource
+    private AliOssUtil aliOssUtil;
+
     @Override
-    public void addfilm(FilmDto film) throws BusinessException {
+    public void addfilm(MultipartFile file,FilmDto film) throws BusinessException {
         //获取前端所有字段。
-        String filmName = film.getMovieName();
+        String movieName = film.getMovieName();
         String leadingActor =  film.getLeadingActor();
-        String moviePicture =  film.getMoviePicture();
-        String moiveType =  film.getMoiveType();
+        String movieType =  film.getMoiveType();
         String movieYear =  film.getMovieYear();
-        String moiveCountry =  film.getMoiveCountry();
+        String movieCountry =  film.getMoiveCountry();
         int movieTime=  film.getMoiveTime();
+        //将图片存入阿里云
+        String filePath = aliOssUtil.upload(file);
         //写入数据库
-        if(filmMapper.addfilm(filmName,leadingActor,moviePicture,
-                moiveType,movieYear,moiveCountry, movieTime)==Boolean.FALSE)
+        if(filmMapper.addfilm(movieName,leadingActor,filePath,
+                movieType,movieYear,movieCountry, movieTime,0)==Boolean.FALSE)
         {
             throw  new BusinessException(ErrorCode.FILM_FAIL, "电影保存失败");
         }

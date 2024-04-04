@@ -1,6 +1,7 @@
 package com.example.my_theatre.entity.dto;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class FilmDto {
@@ -16,15 +17,14 @@ public class FilmDto {
     public String leadingActor;
 
     /**
-     * 剧照
-     */
-    public String moviePicture;
-
-    /**
      * 电影时长
      */
     public int moiveTime;
 
+    /**
+     * 剧照
+     */
+    public MultipartFile moviePicture;
 
     /**
      * 电影国家

@@ -32,7 +32,7 @@ public class userAccountController {
         log.info("当前用户正在 生成验证码，邮箱："+ email + ",验证码类型："+type);
         if(!VerifyRegexUtils.VerifyEmail(email))
         {
-            return ResultUtils.error(ErrorCode.SYSTEM_ERROR, "邮箱格式不正确，请检查输入格式");
+            return ResultUtils.error(ErrorCode.ACCOUNT_ERROR, "邮箱格式不正确，请检查输入格式");
         }
         try {
             userAccountService.sendEmailCode(email, type);

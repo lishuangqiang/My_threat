@@ -64,6 +64,11 @@ public class adminAccountController {
         return ResultUtils.success("插入成功");
     }
 
+    /**
+     * 删除管理员
+     * @param adminDto
+     * @return
+     */
     @PostMapping("/deleteAdmin")
     public BaseResponse<String> delAdmin(@RequestBody AdminDto adminDto) {
 
