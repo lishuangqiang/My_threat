@@ -28,7 +28,7 @@ public class Film {
     /**
      * 电影时长
      */
-    public int moiveTime;
+    public int movieTime;
 
     /**
      * 总售票数量
@@ -38,12 +38,12 @@ public class Film {
     /**
      * 电影国家
      */
-    public String moiveCountry;
+    public String movieCountry;
 
     /**
      * 电影类型
      */
-    public String moiveType;
+    public String movieType;
 
     /**
      * 电影上映年份

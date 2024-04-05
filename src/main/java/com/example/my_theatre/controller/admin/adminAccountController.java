@@ -9,6 +9,7 @@ import com.example.my_theatre.entity.po.Admin;
 import com.example.my_theatre.entity.vo.AdminVo;
 import com.example.my_theatre.exception.BusinessException;
 import com.example.my_theatre.service.impl.AdminAccountServiceImpl;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +19,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequestMapping("/admin/account")
+
 public class adminAccountController {
     @Resource
     AdminAccountServiceImpl adminAccountService;

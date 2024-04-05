@@ -19,4 +19,15 @@
           )
 
     </insert>
+    <delete id="delFilm">
+        delete  from my_threate.movie_table where movie_name=#{movieName}
+    </delete>
+    <select id="allFilm" resultType="com.example.my_theatre.entity.vo.FilmVo">
+        select movie_name,leading_actor,movie_picture,movie_time,movie_country,movie_type,movie_year from my_threate.movie_table;
+    </select>
+    <select id="listWithFlavor" resultType="com.example.my_theatre.entity.vo.FilmVo">
+        SELECT * FROM my_threate.movie_table ORDER BY number_ticket desc
+        limit 0,8 ;
+
+    </select>
 </mapper>

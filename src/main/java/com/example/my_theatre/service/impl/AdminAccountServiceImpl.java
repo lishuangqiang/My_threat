@@ -117,6 +117,10 @@ public class AdminAccountServiceImpl implements AdminAccountService {
         }
     }
 
+    /**
+     * 查询所有管理员
+     * @return
+     */
     @Override
     public List<Admin> findall() {
         //检查是否为管理员操作
