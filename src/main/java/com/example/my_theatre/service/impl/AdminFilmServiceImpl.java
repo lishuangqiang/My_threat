@@ -87,14 +87,13 @@ public class AdminFilmServiceImpl implements AdminFilmService {
         //先检查Redis中是否有数据
         //构造redis的KEY：dish_分类ID
         String key = "Hot_FILM";
-        //查询redis中是否存在菜品数据
+        //查询redis中是否存在电影数据
         List<FilmVo> list = (List<FilmVo>) redisUtil.get(key);
         if (list != null && list.size() != 0) {
             log.info("Redis中存在对应缓存数据，正在查询中.....");
             //如果存在，直接返回，无需查询数据库
             return list;
         }
-
         //如果不存在，查询数据库，再将查到的数据库放入到redis中
         list = filmMapper.listWithFlavor();
        redisUtil.set(key,list);

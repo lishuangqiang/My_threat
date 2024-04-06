@@ -3,18 +3,15 @@ package com.example.my_theatre.config;
 
 import com.example.my_theatre.interceptor.JwtTokenAdminInterceptor;
 import com.example.my_theatre.interceptor.JwtTokenUserInterceptor;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import com.example.my_theatre.json.JacksonObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import java.util.List;
 
 
 /**
@@ -56,5 +53,19 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 
     }
 
+    /*
+     * 通过扩展Spring MVC中的消息转换器，实现对数据格式的统一管理（之前我们采用的是@jsonFormat注解来解决）
+     * */
+    @Override
+    protected void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+        log.info("扩展消息转换器");
+        //创建一个消息转换器对象
+        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+        //需要为消息转换器指定对象转换器    对象转换器课可以将java对象序列化为Json对象
+        converter.setObjectMapper(new JacksonObjectMapper());
+        //将自定义的消息转换器加入到容器中
+        converters.add(0, converter);
+
+    }
 
 }

@@ -5,18 +5,16 @@ import com.example.my_theatre.common.BaseResponse;
 import com.example.my_theatre.common.ResultUtils;
 import com.example.my_theatre.context.BaseContext;
 import com.example.my_theatre.entity.dto.FilmDto;
-import com.example.my_theatre.entity.enums.ErrorCode;
-import com.example.my_theatre.entity.po.Film;
+
 import com.example.my_theatre.entity.vo.FilmVo;
 import com.example.my_theatre.exception.BusinessException;
 import com.example.my_theatre.service.impl.AdminFilmServiceImpl;
-import com.example.my_theatre.utils.AliOssUtil;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
@@ -42,8 +40,8 @@ public class adminFilmController {
     @PostMapping("/addFilm")
     public BaseResponse<String> addFilm(MultipartFile moviePicture,
                                         String movieName, String leadingActor
-            , int movieTime, String movieCountry, String movieType
-            , String movieYear) {
+                                        , int movieTime, String movieCountry, String movieType
+                                        , String movieYear) {
         log.info("当前管理员" + BaseContext.getCurrentId() + "正在上传电影：" + movieName);
         FilmDto film = new FilmDto();
         film.setMovieName(movieName);
@@ -52,8 +50,6 @@ public class adminFilmController {
         film.setMovieCountry(movieCountry);
         film.setMovieType(movieType);
         film.setMovieYear(movieYear);
-
-
         try {
             adminFilmService.addfilm(moviePicture, film);
 
@@ -71,6 +67,7 @@ public class adminFilmController {
      */
     @PostMapping("/delFilm")
     public BaseResponse<String> delFilm(String movieName) {
+        log.info("当前管理员正在删除电影 "+ movieName + "管理员id为：");
         try {
             adminFilmService.delFilm(movieName);
 

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.my_theatre.mapper.ThreatMapper">
+    <insert id="insertNewMovie">
+        insert into my_threate.first_threat_table( playing_movie_id, start_time, end_time, movie_name, movie_picture)
+        VALUES(
+               #{movieId},
+               #{startTime},
+               #{endTime},
+               #{movieName},
+               #{moviePicture}
+              )
+
+    </insert>
+
+    <select id="selectall" resultType="com.example.my_theatre.entity.vo.ThreatVo">
+        SELECT movie_picture,movie_name,start_time,end_time FROM my_threate.first_threat_table
+    </select>
+    <select id="isRightTime" resultType="java.lang.Boolean">
+        SELECT EXISTS (
+            SELECT 1
+            FROM first_threat_table
+            WHERE first_threat_table.end_time > #{startTime}
+            LIMIT 1
+        )
+    </select>
+</mapper>

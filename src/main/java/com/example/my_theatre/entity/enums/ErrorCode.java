@@ -23,7 +23,8 @@ public enum ErrorCode {
     NO_MAIN_OPERATION(50007,"非法权限操作" ),
     FILM_FAIL(50008,"上传电影失败"),
     PICTURE_IS_NULL(50009,"图片为空"),
-    UPLOAD_IS_FAIL(50010,"图片上传失败");
+    UPLOAD_IS_FAIL(50010,"图片上传失败"),
+    TIME_IS_FAIL(50011,"上映时间冲突");
 
 
     /**
