@@ -14,6 +14,10 @@
               )
 
     </insert>
+    <delete id="deletemovieByid">
+        delete from first_threat_table where playing_movie_id = #{id}
+    </delete>
+
 
     <select id="selectall" resultType="com.example.my_theatre.entity.vo.ThreatVo">
         SELECT movie_picture,movie_name,start_time,end_time FROM my_threate.first_threat_table

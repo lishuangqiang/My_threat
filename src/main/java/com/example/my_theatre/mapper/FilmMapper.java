@@ -7,6 +7,7 @@ import com.example.my_theatre.entity.po.Film;
 import com.example.my_theatre.entity.vo.FilmVo;
 
 import java.util.List;
+import java.util.Map;
 
 public interface FilmMapper extends BaseMapper<Film> {
 
@@ -17,4 +18,8 @@ public interface FilmMapper extends BaseMapper<Film> {
     List<FilmVo> allFilm();
 
     List<FilmVo> listWithFlavor();
+
+    List<FilmVo> selectFilmsByPage(Map<String, Integer> params);
+
+    Boolean selectBymovieName(String movieName);
 }

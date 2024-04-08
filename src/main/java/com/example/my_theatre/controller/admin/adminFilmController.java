@@ -66,7 +66,7 @@ public class adminFilmController {
      * @return
      */
     @PostMapping("/delFilm")
-    public BaseResponse<String> delFilm(String movieName) {
+    public BaseResponse<String> delFilm(@RequestBody String movieName) {
         log.info("当前管理员正在删除电影 "+ movieName + "管理员id为：");
         try {
             adminFilmService.delFilm(movieName);
@@ -78,14 +78,14 @@ public class adminFilmController {
     }
 
     /**
-     * 查询所有电影
+     * 查询所有电影（分页查询，减轻数据库压力）
      */
     @GetMapping("/allFilm")
-    public BaseResponse<List<FilmVo>> allFilm() {
-        List<FilmVo> films = adminFilmService.allFilm();
+    public BaseResponse<List<FilmVo>> allFilm(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
+        log.info("分页查询数据库所有电影.....");
+        List<FilmVo> films = adminFilmService.allFilmByPage(page, size);
         return ResultUtils.success(films);
     }
-
     /**
      * 查询热门电影（基于Redis做缓存）
      * 票房前八

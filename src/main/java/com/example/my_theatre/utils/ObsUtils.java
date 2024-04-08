@@ -20,7 +20,7 @@ public class ObsUtils {
     private static ObsClient obsClient;
 
 
-    private static String bucketName;
+    public static String bucketName;
 
     private static String parentDir;
 

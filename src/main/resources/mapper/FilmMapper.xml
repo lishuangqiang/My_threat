@@ -30,4 +30,15 @@
         limit 0,8 ;
 
     </select>
+    <select id="selectFilmsByPage" resultType="com.example.my_theatre.entity.vo.FilmVo" parameterType="map">
+            SELECT * FROM my_threate.movie_table LIMIT #{start}, #{size}
+    </select>
+    <select id="selectBymovieName" resultType="java.lang.Boolean">
+        SELECT EXISTS (
+            SELECT 1
+            FROM my_threate.movie_table
+            WHERE movie_name = #{movieName}
+            LIMIT 1
+        )
+    </select>
 </mapper>

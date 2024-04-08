@@ -16,6 +16,8 @@ public interface ThreatMapper extends BaseMapper<User> {
     Boolean insertNewMovie(LocalDateTime startTime, LocalDateTime endTime, String movieName, int movieId, String moviePicture);
 
     boolean isRightTime(LocalDateTime startTime);
+
+    Boolean deletemovieByid(int id);
 }
 
 

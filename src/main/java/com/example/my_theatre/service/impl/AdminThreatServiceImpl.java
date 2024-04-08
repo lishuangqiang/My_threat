@@ -5,6 +5,7 @@ import com.example.my_theatre.entity.dto.ThreatDto;
 import com.example.my_theatre.entity.enums.ErrorCode;
 import com.example.my_theatre.entity.vo.ThreatVo;
 import com.example.my_theatre.exception.BusinessException;
+import com.example.my_theatre.mapper.FilmMapper;
 import com.example.my_theatre.mapper.ThreatMapper;
 import com.example.my_theatre.service.AdminThreatService;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,8 @@ public class AdminThreatServiceImpl implements AdminThreatService {
 
     @Resource
     public ThreatMapper threatMapper;
+    @Resource
+    public FilmMapper filmMapper;
 
     /**
      * 展现剧院所有上映电影
@@ -38,7 +41,11 @@ public class AdminThreatServiceImpl implements AdminThreatService {
      */
     @Override
     public void addFilm(ThreatDto threatDto) throws BusinessException {
-        log.info("当前管理员正在上映新电影 ，管理员账号为："+ BaseContext.getCurrentId());
+        //检查当前电影是否存在：
+        if(filmMapper.selectBymovieName(threatDto.getMovieName()) == Boolean.FALSE)
+        {
+            throw new BusinessException(ErrorCode.FILM_NOT_EXIST);
+        }
         LocalDateTime startTime = threatDto.startTime;
         LocalDateTime endTime =threatDto.endTime;
         String movieName= threatDto.movieName;
@@ -51,6 +58,24 @@ public class AdminThreatServiceImpl implements AdminThreatService {
         }
         //判断插入结果
         if(threatMapper.insertNewMovie(startTime,endTime,movieName,movieId,moviePicture) == Boolean.FALSE)
+        {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+
+    }
+
+    @Override
+    public void delFilm(ThreatDto threatDto) throws BusinessException {
+        //检查当前电影是否存在
+        if(filmMapper.selectBymovieName(threatDto.getMovieName()) == Boolean.FALSE)
+        {
+            throw new BusinessException(ErrorCode.FILM_NOT_EXIST);
+        }
+
+
+        int id = threatDto.getPlayingMovieId();
+        //判断删除结果
+        if(threatMapper.deletemovieByid(id) == Boolean.FALSE)
         {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }

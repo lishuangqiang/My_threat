@@ -25,7 +25,7 @@ public class adminThreatController {
      */
     @GetMapping("/findFilm")
     public BaseResponse<List<ThreatVo>> findFilm() {
-        log.info("当前管理员正在查询所有上映电影管理员");
+        log.info("当前管理员正在查询所有上映电影");
         List<ThreatVo> lists;
         try {
             lists = adminThreatService.findAllfilm();
@@ -57,6 +57,26 @@ public class adminThreatController {
             return ResultUtils.error(e.getCode(), e.getMessage());
         }
         return ResultUtils.success("上映电影成功");
+    }
+
+    /**
+     * 下映电影
+     */
+    @PostMapping("/delFilm")
+    public BaseResponse<String>delFilm(@RequestBody ThreatDto threatDto)
+    {
+        log.info("当前管理员正在尝试上映电影");
+        if (threatDto == null) {
+            return ResultUtils.error(ErrorCode.PARAMS_ERROR);
+        }
+        try {
+            adminThreatService.delFilm(threatDto);
+        }
+        catch (BusinessException e)
+        {
+            return ResultUtils.error(e.getCode(), e.getMessage());
+        }
+        return ResultUtils.success("上映成功");
     }
 }
 

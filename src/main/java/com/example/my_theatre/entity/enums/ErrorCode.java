@@ -24,7 +24,9 @@ public enum ErrorCode {
     FILM_FAIL(50008,"上传电影失败"),
     PICTURE_IS_NULL(50009,"图片为空"),
     UPLOAD_IS_FAIL(50010,"图片上传失败"),
-    TIME_IS_FAIL(50011,"上映时间冲突");
+    TIME_IS_FAIL(50011,"上映时间冲突"),
+    FILM_NOT_EXIST(50012,"上映电影不存在" ),
+    ORDER_IS_NULL(50013,"订单为空" );
 
 
     /**

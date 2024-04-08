@@ -16,4 +16,6 @@ public interface AdminFilmService {
     List<FilmVo> allFilm();
 
     List<FilmVo> getHotFilms();
+
+    List<FilmVo> allFilmByPage(int page, int size);
 }

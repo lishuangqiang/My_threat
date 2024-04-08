@@ -16,7 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -47,6 +49,12 @@ public class AdminFilmServiceImpl implements AdminFilmService {
         String movieYear =  film.getMovieYear();
         String movieCountry =  film.getMovieCountry();
         int movieTime=  film.getMovieTime();
+
+        //检查数据库中是否已经添加过相同的电影：
+        if(filmMapper.selectBymovieName(movieName)==Boolean.TRUE)
+        {
+            throw new BusinessException(ErrorCode.FILM_FAIL,"禁止上传相同电影");
+        }
         //将图片存入阿里云
         String filePath = aliOssUtil.upload(file);
         //写入数据库
@@ -98,5 +106,14 @@ public class AdminFilmServiceImpl implements AdminFilmService {
         list = filmMapper.listWithFlavor();
        redisUtil.set(key,list);
         return list;
+    }
+
+    @Override
+    public List<FilmVo> allFilmByPage(int page, int size) {
+            int start = (page - 1) * size;
+            Map<String, Integer> params = new HashMap<>();
+            params.put("start", start);
+            params.put("size", size);
+            return filmMapper.selectFilmsByPage(params);
     }
 }

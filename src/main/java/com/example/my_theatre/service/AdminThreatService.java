@@ -9,4 +9,6 @@ public interface AdminThreatService {
     List<ThreatVo> findAllfilm();
 
     void addFilm(ThreatDto threatDto);
+
+    void delFilm(ThreatDto threatDto);
 }

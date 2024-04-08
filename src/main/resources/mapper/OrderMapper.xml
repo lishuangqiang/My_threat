@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.my_theatre.mapper.OrderMapper">
+    <update id="cancleOrder">
+        update my_threate.order_table set order_pay_statue = '2'
+                                      where order_id = #{orderId}
+    </update>
+
+    <select id="getallorderBypage" resultType="com.example.my_theatre.entity.vo.OrderVo">
+        SELECT * FROM my_threate.order_table LIMIT #{start}, #{size}
+    </select>
+
+</mapper>
