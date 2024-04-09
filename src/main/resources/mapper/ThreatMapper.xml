@@ -14,6 +14,11 @@
               )
 
     </insert>
+    <update id="updatesealsit">
+        UPDATE first_threat_table
+        SET seal_sit = first_threat_table.seal_sit + 1
+        WHERE playing_movie_id =#{playmovieId};
+    </update>
     <delete id="deletemovieByid">
         delete from first_threat_table where playing_movie_id = #{id}
     </delete>
@@ -29,5 +34,8 @@
             WHERE first_threat_table.end_time > #{startTime}
             LIMIT 1
         )
+    </select>
+    <select id="selectBymovieId" resultType="com.example.my_theatre.entity.po.Threat">
+        select * from first_threat_table where playing_movie_id = #{playmovieId}
     </select>
 </mapper>

@@ -3,6 +3,19 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.my_theatre.mapper.OrderMapper">
+    <insert id="insertOrder">
+        insert into order_table (order_id, movie_id, movie_name, order_user, order_pay_statue,  order_qrcode_url)
+        values (
+                   #{orderId},
+                   #{playmovieId},
+                   #{movieName},
+                   #{orderUser},
+                   #{orderStatus},
+                   #{qRcodeUrl}
+               )
+
+    </insert>
+
     <update id="cancleOrder">
         update my_threate.order_table set order_pay_statue = '2'
                                       where order_id = #{orderId}

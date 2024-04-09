@@ -14,4 +14,8 @@ public interface OrderMapper extends BaseMapper<Order> {
 
 
     Boolean cancleOrder(String orderId);
+
+
+    Boolean insertOrder(String orderId, int playmovieId, String movieName,
+                     String orderUser, int orderStatus, String qRcodeUrl);
 }

@@ -6,6 +6,11 @@ import java.time.LocalDateTime;
 
 @Data
 public class ThreatVo {
+    /**
+     * 上映电影id
+     */
+    public int playingMovieId;
+
 
     /**
      * 电影开始时间

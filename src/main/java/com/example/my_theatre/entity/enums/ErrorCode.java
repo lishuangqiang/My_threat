@@ -26,7 +26,10 @@ public enum ErrorCode {
     UPLOAD_IS_FAIL(50010,"图片上传失败"),
     TIME_IS_FAIL(50011,"上映时间冲突"),
     FILM_NOT_EXIST(50012,"上映电影不存在" ),
-    ORDER_IS_NULL(50013,"订单为空" );
+    ORDER_IS_NULL(50013,"订单为空" ),
+    THREAT_IS_NULL(50014,"当前场次无电影"),
+    SET_IS_FULL(50015,"当前场次已满员" ),
+    SET_IS_USED(50016,"当前座位已经售出" );
 
 
     /**

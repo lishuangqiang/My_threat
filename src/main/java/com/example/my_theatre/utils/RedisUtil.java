@@ -590,5 +590,7 @@ public class RedisUtil {
         return boundValueOperations.rightPop();
     }
 
+
+
     //=========BoundListOperations 用法 End============
 }

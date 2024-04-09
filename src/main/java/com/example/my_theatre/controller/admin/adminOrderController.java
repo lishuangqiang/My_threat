@@ -6,6 +6,7 @@ import com.example.my_theatre.entity.vo.FilmVo;
 import com.example.my_theatre.entity.vo.OrderVo;
 import com.example.my_theatre.exception.BusinessException;
 import com.example.my_theatre.service.impl.AdminOrderServiceImpl;
+import com.google.zxing.WriterException;
 import com.google.zxing.qrcode.encoder.QRCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -53,22 +55,31 @@ public class adminOrderController {
 
     /**
      * 管理员端下单
-     * @param Name
+     * @param playmovieId
      * @return
      * todo
      * 这里的思路为：返回一个包含订单信息的二维码。后续可以抽象这个接口为通用接口
      */
-//    @GetMapping("/createOrderByAdmin")
-//    public BaseResponse<QRCode> createOrderByAdmin(String Name) {
-//        log.info("管理员端下单");
-//        QRCode qrCode;
-//        try {
-//            qrCode = adminOrderService.createOrderByAdmin(Name);
-//        } catch (BusinessException e) {
-//            return ResultUtils.error(e.getCode(), e.getMessage());
-//        }
-//        return ResultUtils.success(qrCode);
-//    }
+    @GetMapping("/createOrderByAdmin")
+    public BaseResponse<String> createOrderByAdmin(@RequestParam int playmovieId,
+                                                   @RequestParam int x_set,
+                                                   @RequestParam int y_set)
+    {
+        log.info("管理员端下单");
+        String QRcode;
+        try {
+            QRcode = adminOrderService.createOrderByAdmin(playmovieId,x_set,y_set);
+        } catch (BusinessException e) {
+            return ResultUtils.error(e.getCode(), e.getMessage());
+        } catch (IOException e) {
+            //读文件上传至oss发生异常
+            throw new RuntimeException(e);
+        } catch (WriterException e) {
+            throw new RuntimeException(e);
+        }
+
+        return ResultUtils.success(QRcode);
+    }
 
 
 

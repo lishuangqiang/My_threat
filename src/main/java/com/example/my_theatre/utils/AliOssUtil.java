@@ -4,15 +4,23 @@ import com.aliyun.oss.ClientException;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.OSSException;
+import com.aliyun.oss.model.ObjectMetadata;
 import com.example.my_theatre.entity.enums.ErrorCode;
+import com.example.my_theatre.entity.po.Order;
 import com.example.my_theatre.exception.BusinessException;
+import com.google.zxing.WriterException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.UUID;
 
 @Data
@@ -86,11 +94,43 @@ public class AliOssUtil {
     }
 
     /**
-     * 得到客户端
+     * 生成二维码并且上传到 阿里云OSS中
      */
-    public OSS getClient()
-    {
+    public  String  CreateQRandUpload(HashMap<String, Object> order) throws IOException, WriterException {
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        // 生成二维码图片
+        CodeImageUtil.writeToStream(order, out, 300, 300);
+
+        // 创建OSSClient实例。
         OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
-        return ossClient;
+
+        URL qrCodeUrl;
+        try {
+            // 生成一个随机的文件名
+            String fileName = cn.hutool.core.lang.UUID.randomUUID().toString() + ".jpg";
+
+            // 将二维码写入内存流
+            InputStream inputStream = new ByteArrayInputStream(out.toByteArray());
+
+            // 创建上传Object的Metadata
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentLength(out.size()); // 设置上传内容长度
+
+            // 上传文件流
+            ossClient.putObject(bucketName, fileName, inputStream, metadata);
+
+            // 生成的二维码上传至阿里云OSS成功后，生成URL并设置过期时间
+            Date expiration = new Date(System.currentTimeMillis() + 3600 * 1000); // 设置URL过期时间为1小时
+            qrCodeUrl = ossClient.generatePresignedUrl(bucketName, fileName, expiration);
+
+            // 打印生成的URL
+            System.out.println("生成的二维码已上传至阿里云OSS，URL为：" + qrCodeUrl.toString());
+        } finally {
+            // 关闭OSS客户端
+            ossClient.shutdown();
+        }
+        return qrCodeUrl.toString();
+
     }
 }

@@ -1,6 +1,7 @@
 package com.example.my_theatre.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.example.my_theatre.entity.po.Threat;
 import com.example.my_theatre.entity.po.User;
 import com.example.my_theatre.entity.vo.ThreatVo;
 
@@ -18,6 +19,12 @@ public interface ThreatMapper extends BaseMapper<User> {
     boolean isRightTime(LocalDateTime startTime);
 
     Boolean deletemovieByid(int id);
+
+
+    Threat selectBymovieId(int playmovieId);
+
+
+    void updatesealsit(int playmovieId);
 }
 
 
