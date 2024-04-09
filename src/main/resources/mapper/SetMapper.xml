@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.my_theatre.mapper.SetMapper">
+    <insert id="insertSet">
+        insert into my_threate.set_table (x_set, y_set, movie_name, set_state, play_movie_id)
+        VALUES (#{xSet},
+                #{ySet},
+                #{movieName},
+                '1',
+                #{playmovieId})
+    </insert>
+
+    <select id="select" resultType="java.lang.Boolean">
+        SELECT COUNT(*)
+        FROM my_threate.set_table
+        WHERE x_set = #{xSet} AND y_set = #{ySet}
+        LIMIT 1;
+
+    </select>
+</mapper>
