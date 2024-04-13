@@ -29,7 +29,9 @@ public enum ErrorCode {
     ORDER_IS_NULL(50013,"订单为空" ),
     THREAT_IS_NULL(50014,"当前场次无电影"),
     SET_IS_FULL(50015,"当前场次已满员" ),
-    SET_IS_USED(50016,"当前座位已经售出" );
+    SET_IS_USED(50016,"当前座位已经售出" ),
+    CANCEL_ORDER_FAIL(50017,"删除订单失败" ),
+    ORDER_NOT_EXIST(50018,"订单不存在" );
 
 
     /**

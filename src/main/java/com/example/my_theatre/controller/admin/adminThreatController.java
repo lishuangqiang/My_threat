@@ -65,7 +65,7 @@ public class adminThreatController {
     @PostMapping("/delFilm")
     public BaseResponse<String>delFilm(@RequestBody ThreatDto threatDto)
     {
-        log.info("当前管理员正在尝试上映电影");
+        log.info("当前管理员正在尝试下映电影");
         if (threatDto == null) {
             return ResultUtils.error(ErrorCode.PARAMS_ERROR);
         }
@@ -76,7 +76,7 @@ public class adminThreatController {
         {
             return ResultUtils.error(e.getCode(), e.getMessage());
         }
-        return ResultUtils.success("上映成功");
+        return ResultUtils.success("下映成功");
     }
 }
 

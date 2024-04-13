@@ -6,6 +6,10 @@ import java.io.Serializable;
 @Data
 public class AdminDto implements Serializable {
     /**
+     * 管理员id
+     */
+    int adminId;
+    /**
      * 用户名称
      */
     String adminName;

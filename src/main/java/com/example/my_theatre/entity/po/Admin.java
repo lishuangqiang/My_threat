@@ -10,6 +10,11 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class Admin implements Serializable {
     /**
+     * 管理员id
+     */
+    int adminId;
+
+    /**
      * 管理员姓名
      */
     String adminName;

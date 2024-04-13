@@ -50,7 +50,7 @@ public class AdminAccountServiceImpl implements AdminAccountService {
         //写入token
         //登录成功后，生成jwt令牌
         Map<String, Object> claims = new HashMap<>();
-        claims.put(JwtClaimsConstant.ADMIN_ACCOUNT, admin.getAdminAccount());
+        claims.put(JwtClaimsConstant.ADMIN_ID, admin.getAdminAccount());
         String token = JwtUtil.createJWT(
                 jwtProperties.getAdminSecretKey(),
                 jwtProperties.getAdminTtl(),

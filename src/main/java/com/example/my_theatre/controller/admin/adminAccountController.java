@@ -10,6 +10,7 @@ import com.example.my_theatre.entity.vo.AdminVo;
 import com.example.my_theatre.exception.BusinessException;
 import com.example.my_theatre.service.impl.AdminAccountServiceImpl;
 
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 

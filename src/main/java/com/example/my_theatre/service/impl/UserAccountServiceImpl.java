@@ -46,8 +46,9 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     /**
      * 发送验证码
-     *
      * @param email
+     * @param type
+     * @throws MessagingException
      */
     @Override
     public void sendEmailCode(String email, String type) throws MessagingException {
@@ -142,11 +143,7 @@ public class UserAccountServiceImpl implements UserAccountService {
         if (ifuser != null) {
             throw new BusinessException(ErrorCode.EMAIL_ERROR, "此邮箱已注册");
         }
-        //对用户名进行正则校验
 
-        if (!VerifyRegexUtils.VerifyName(username)) {
-            throw new BusinessException(ErrorCode.ACCOUNT_ERROR, "用户名格式不正确，请检查输入格式");
-        }
         //校验验证码：
         String rightCode = (String) redisUtil.get(EmailConstant.regiser + Email);
         if (code.equals(rightCode)) {
@@ -220,22 +217,18 @@ public class UserAccountServiceImpl implements UserAccountService {
         if (userinfo.getUserStatus() == UserConstants.User_prohibit) {
             throw new BusinessException(ErrorCode.STATUS_ERROR, "此账号已被禁用，请联系管理员");
         }
-        //校验用户密码
-        if (!userinfo.getUserPassword().equals(userintoPassword)) {
-            throw new BusinessException(ErrorCode.PASSWPRD_ERROR, "用户密码不正确，请重新输入或获取");
-        }
 
         //写入token
         //登录成功后，生成jwt令牌
         Map<String, Object> claims = new HashMap<>();
-        claims.put(JwtClaimsConstant.USER_ACCOUNT, userinfo.getUserAccount());
+        claims.put(JwtClaimsConstant.USER_ID, userinfo.getId());
         String token = JwtUtil.createJWT(
                 jwtProperties.getAdminSecretKey(),
                 jwtProperties.getAdminTtl(),
                 claims);
 
 
-        //员工登录成功之后向前端返回的数据，我们采用自定义结构封装
+        //用户登录成功之后向前端返回的数据，我们采用自定义结构封装
         UserVo userLoginVO = new UserVo();
 
         userLoginVO.setEmail(userinfo.getUserAccount());
@@ -291,7 +284,7 @@ public class UserAccountServiceImpl implements UserAccountService {
         //写入token
         //登录成功后，生成jwt令牌
         Map<String, Object> claims = new HashMap<>();
-        claims.put(JwtClaimsConstant.USER_ACCOUNT, user.getUserAccount());
+        claims.put(JwtClaimsConstant.USER_ID, user.getId());
         String token = JwtUtil.createJWT(
                 jwtProperties.getAdminSecretKey(),
                 jwtProperties.getAdminTtl(),

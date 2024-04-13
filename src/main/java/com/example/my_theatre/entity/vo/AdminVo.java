@@ -11,6 +11,12 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AdminVo implements Serializable {
+
+    /**
+     * 管理员id
+     */
+    int adminId;
+
     /**
      * 管理员名称
      */

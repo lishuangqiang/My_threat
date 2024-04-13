@@ -25,4 +25,9 @@ public class UserVo {
      */
     private String token;
 
+    /**
+     * 用户id
+     */
+    private  int id;
+
 }

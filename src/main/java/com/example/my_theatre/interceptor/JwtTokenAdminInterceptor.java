@@ -6,7 +6,6 @@ import com.example.my_theatre.entity.constants.JwtClaimsConstant;
 import com.example.my_theatre.entity.po.Admin;
 import com.example.my_theatre.mapper.AdminMapper;
 import com.example.my_theatre.properties.JwtProperties;
-import com.example.my_theatre.service.AdminAccountService;
 import com.example.my_theatre.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
@@ -47,6 +46,7 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
             return true;
         }
 
+
         //1、从请求头中获取令牌
         String token = request.getHeader(jwtProperties.getAdminTokenName());
 
@@ -54,7 +54,7 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
         try {
             log.info("jwt校验:{}", token);
             Claims claims = JwtUtil.parseJWT(jwtProperties.getAdminSecretKey(), token);
-            String  adminId = (String) claims.get(JwtClaimsConstant.ADMIN_ACCOUNT);
+            String  adminId = (String) claims.get(JwtClaimsConstant.ADMIN_ID);
             log.info("当前用户账号id：{}", adminId);
             //使用ThreadLocal来存储empID，使得和这个变量在同线程下的其他包可以使用
             //类型转换问题（数据库字段问题）

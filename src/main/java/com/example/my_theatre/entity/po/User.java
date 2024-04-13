@@ -48,13 +48,10 @@ public class User  implements Serializable {
     private int userStatus;
 
 
-
     /**
-     * 生成当前用户token
-     * @param user
-     * @return
+     * 用户id
      */
-
+    private  int id;
 
 
     private static final long serialVersionUID = 1L;

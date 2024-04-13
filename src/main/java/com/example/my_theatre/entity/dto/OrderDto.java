@@ -1,6 +1,8 @@
 package com.example.my_theatre.entity.dto;
 
-public class OrderDto {
+import java.io.Serializable;
+
+public class OrderDto implements Serializable {
 
     /**
      * 电影id

@@ -22,8 +22,12 @@ import javax.annotation.Resource;
 public class userAccountController {
     @Resource
     UserAccountServiceImpl userAccountService;
+
     /**
-     * 发送邮箱验证码
+     * 发送验证码  0：注册 1：找回 2： 注销 3：登录
+     * @param email
+     * @param type
+     * @return
      */
     @PostMapping("/sendEmailCode")
    // @VerifyParam(required = true,regexAccount = VerifyRegexEnum.EMAIL)
@@ -101,12 +105,8 @@ public class userAccountController {
         //获取用户账户和密码
         String email = user.getEmail();
         String password = user.getPassword();
-        // 对用户名进行正则表达式判断：
-
-        if (!VerifyRegexUtils.VerifyEmail(email)) {
-            return ResultUtils.error(ErrorCode.SYSTEM_ERROR, "邮箱格式不正确，请检查输入格式");
-        }
         UserVo userinfoVo;
+
         try {
             userinfoVo = userAccountService.login(email, password);
 

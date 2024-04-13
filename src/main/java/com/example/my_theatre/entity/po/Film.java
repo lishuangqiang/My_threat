@@ -2,8 +2,10 @@ package com.example.my_theatre.entity.po;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class Film {
+public class Film implements Serializable {
     /**
      * 电影id
      */

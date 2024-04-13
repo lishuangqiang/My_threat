@@ -34,4 +34,5 @@ public class OrderVo {
      * 用户订单二维码
      */
     public String orderQrcodeUrl;
+
 }

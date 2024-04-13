@@ -2,10 +2,11 @@ package com.example.my_theatre.entity.dto;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-public class ThreatDto {
+public class ThreatDto  implements Serializable {
     /**
      * 座位总数
      */

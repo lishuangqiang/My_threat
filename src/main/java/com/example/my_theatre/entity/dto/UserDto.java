@@ -33,6 +33,10 @@ public class UserDto implements Serializable {
      */
     private String code;
 
+    /**
+     * 用户id
+     */
+    private  int id;
 
 
     private static final long serialVersionUID = 1L;

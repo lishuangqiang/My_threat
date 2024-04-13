@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.my_theatre.mapper.ApplyorderMapper">
+
+    <insert id="insertNewOrder">
+        insert into my_threate.apply_order (order_id, apply_account, is_agree)
+        VALUES(
+               #{orderId},
+               #{userId},
+                '2'
+              )
+
+    </insert>
+    <update id="updateApproval">
+        UPDATE my_threate.apply_order
+        SET is_agree = #{status}
+        WHERE order_id =#{orderId};
+    </update>
+    <select id="selectApprovalOrder" resultType="com.example.my_theatre.entity.po.Applyorder">
+        SELECT * FROM my_threate.apply_order LIMIT #{start}, #{size}
+    </select>
+</mapper>

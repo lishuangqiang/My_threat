@@ -18,4 +18,12 @@ public interface OrderMapper extends BaseMapper<Order> {
 
     Boolean insertOrder(String orderId, int playmovieId, String movieName,
                      String orderUser, int orderStatus, String qRcodeUrl);
+
+
+    List<OrderVo> selectOrderByPage(Map<String, Integer> params, Long currentId);
+
+
+    List<OrderVo> getuserorderBypage(Map<String, Integer> params, String userAccount);
+
+    Order selectByorderId(String orderId);
 }

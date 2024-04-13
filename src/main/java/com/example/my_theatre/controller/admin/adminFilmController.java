@@ -10,6 +10,7 @@ import com.example.my_theatre.entity.vo.FilmVo;
 import com.example.my_theatre.exception.BusinessException;
 import com.example.my_theatre.service.impl.AdminFilmServiceImpl;
 
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequestMapping("/admin/film")
+@Api(tags = "管理员管理电影相关接口")
 public class adminFilmController {
     @Autowired
     private AdminFilmServiceImpl adminFilmService;
@@ -92,6 +94,7 @@ public class adminFilmController {
      */
     @GetMapping("/getHotFilms")
     public BaseResponse<List<FilmVo>> getHotFilms() {
+        //todo（这里用到了Redis,因此要注意数据库和redis的更新行为）
         List<FilmVo> films = adminFilmService.getHotFilms();
         return ResultUtils.success(films);
     }

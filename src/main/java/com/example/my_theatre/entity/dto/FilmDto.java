@@ -3,8 +3,10 @@ package com.example.my_theatre.entity.dto;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.Serializable;
+
 @Data
-public class FilmDto {
+public class FilmDto implements Serializable {
     /**
      * 电影名称
      */

@@ -25,7 +25,7 @@
 
 
     <select id="selectall" resultType="com.example.my_theatre.entity.vo.ThreatVo">
-        SELECT movie_picture,movie_name,start_time,end_time FROM my_threate.first_threat_table
+        SELECT playing_movie_id, movie_picture,movie_name,start_time,end_time FROM my_threate.first_threat_table
     </select>
     <select id="isRightTime" resultType="java.lang.Boolean">
         SELECT EXISTS (

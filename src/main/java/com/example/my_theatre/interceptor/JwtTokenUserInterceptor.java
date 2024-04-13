@@ -50,11 +50,11 @@ public class JwtTokenUserInterceptor implements HandlerInterceptor {
         try {
             log.info("jwt校验:{}", token);
             Claims claims = JwtUtil.parseJWT(jwtProperties.getAdminSecretKey(), token);
-            String  userId = (String) claims.get(JwtClaimsConstant.ADMIN_ACCOUNT);
+            int   userId = (int) claims.get(JwtClaimsConstant.USER_ID);
             log.info("当前用户账号id：{}", userId);
             //使用ThreadLocal来存储empID，使得和这个变量在同线程下的其他包可以使用
 
-            BaseContext.setCurrentId(Long.valueOf(userId));
+            BaseContext.setCurrentId((long) userId);
             //3、通过，放行
             return true;
         } catch (Exception ex) {
