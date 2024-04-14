@@ -148,6 +148,12 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         return applyorderMapper.selectApprovalOrder(params);
     }
 
+    /**
+     * 管理员审批退单请求
+     * @param orderId
+     * @param status
+     * @throws BusinessException
+     */
     @Override
     public void ApprovalOrder(String orderId, int status) throws BusinessException {
         if (orderId == null) {

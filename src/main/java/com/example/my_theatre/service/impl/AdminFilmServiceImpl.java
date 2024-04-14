@@ -25,8 +25,6 @@ import java.util.Map;
 public class AdminFilmServiceImpl implements AdminFilmService {
     @Resource
     private FilmMapper filmMapper;
-
-
     @Resource
     private AliOssUtil aliOssUtil;
 
@@ -108,6 +106,12 @@ public class AdminFilmServiceImpl implements AdminFilmService {
         return list;
     }
 
+    /**
+     * 分页查询所有电影
+     * @param page
+     * @param size
+     * @return
+     */
     @Override
     public List<FilmVo> allFilmByPage(int page, int size) {
             int start = (page - 1) * size;

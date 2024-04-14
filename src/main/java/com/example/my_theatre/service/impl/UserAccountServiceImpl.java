@@ -19,6 +19,7 @@ import com.example.my_theatre.utils.StringTools;
 
 import com.example.my_theatre.utils.VerifyRegexUtils;
 import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -39,7 +40,7 @@ public class UserAccountServiceImpl implements UserAccountService {
     @Resource
     private RedisUtil redisUtil;
     @Resource
-    UserMapper userMapper;
+    private UserMapper userMapper;
     @Resource
     private JwtProperties jwtProperties;
 
@@ -70,63 +71,53 @@ public class UserAccountServiceImpl implements UserAccountService {
     }
 
 
-    //私有方法
-    private void sendEmailCode(String toEmail, String code, String type) throws MessagingException {
-        try {
-            //true 代表支持复杂的类型
-            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(javaMailSender.createMimeMessage(), true);
-            //邮件发信人
-            mimeMessageHelper.setFrom(EmailConstant.SendMiler);
-            //邮件收信人
-            mimeMessageHelper.setTo(toEmail);
-            //邮箱头部
-            mimeMessageHelper.setSubject(EmailConstant.subjective);
-            //邮件主题
-            mimeMessageHelper.setText(EmailConstant.subjective);
-            //判断类型
-            if (type.equals(EmailConstant.regiser)) {
-                //邮件头部
+    /**
+     * 私有方法
+     * 采用QQ邮箱APi发送邮件
+     * @param toEmail
+     * @param code
+     * @param type
+     */
+    private void sendEmailCode(String toEmail, String code, String type) {
+        String emailText = "";
 
-                //邮件内容
-                mimeMessageHelper.setText(EmailConstant.regiser_text + code + EmailConstant.tail);
-                //邮件发送时间
-                mimeMessageHelper.setSentDate(new Date());
-                //发送邮件
-                javaMailSender.send(mimeMessageHelper.getMimeMessage());
-                System.out.println("发送邮件成功：" + EmailConstant.SendMiler + "===>" + toEmail);
-            } else if (type.equals(EmailConstant.forget)) {
-                //邮件内容
-                mimeMessageHelper.setText(EmailConstant.forget_text + code + EmailConstant.tail);
-                //邮件发送时间
-                mimeMessageHelper.setSentDate(new Date());
-                //发送邮件
-                javaMailSender.send(mimeMessageHelper.getMimeMessage());
-                System.out.println("发送邮件成功：" + EmailConstant.SendMiler + "===>" + toEmail);
-            } else if (type.equals(EmailConstant.logout)) {
-                //邮件内容
-                mimeMessageHelper.setText(EmailConstant.logout_text + code + EmailConstant.tail);
-                //邮件发送时间
-                mimeMessageHelper.setSentDate(new Date());
-                //发送邮件
-                javaMailSender.send(mimeMessageHelper.getMimeMessage());
-                System.out.println("发送邮件成功：" + EmailConstant.SendMiler + "===>" + toEmail);
-            } else if (type.equals(EmailConstant.login)) {
-                //邮件内容
-                mimeMessageHelper.setText(EmailConstant.login_text + code + EmailConstant.tail);
-                //邮件发送时间
-                mimeMessageHelper.setSentDate(new Date());
-                //发送邮件
-                javaMailSender.send(mimeMessageHelper.getMimeMessage());
-                System.out.println("发送邮件成功：" + EmailConstant.SendMiler + "===>" + toEmail);
-
-            }
-
-        } catch (MessagingException e) {
-            e.printStackTrace();
-            System.out.println("发送邮件失败：" + e.getMessage());
+        switch (type) {
+            case EmailConstant.regiser:
+                emailText = EmailConstant.regiser_text;
+                break;
+            case EmailConstant.forget:
+                emailText = EmailConstant.forget_text;
+                break;
+            case EmailConstant.logout:
+                emailText = EmailConstant.logout_text;
+                break;
+            case EmailConstant.login:
+                emailText = EmailConstant.login_text;
+                break;
+            default:
+                System.out.println("未知的邮件类型：" + type);
+                return;
         }
 
+        emailText += code + EmailConstant.tail;
+
+        try {
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+
+            mimeMessageHelper.setFrom(EmailConstant.SendMiler);
+            mimeMessageHelper.setTo(toEmail);
+            mimeMessageHelper.setSubject(EmailConstant.subjective);
+            mimeMessageHelper.setText(emailText);
+            mimeMessageHelper.setSentDate(new Date());
+
+            javaMailSender.send(mimeMessage);
+            System.out.println("发送邮件成功：" + EmailConstant.SendMiler + "===>" + toEmail);
+        } catch (MessagingException e) {
+            System.out.println("发送邮件失败：" + e.getMessage());
+        }
     }
+
 
     /**
      * 用户注册
@@ -268,10 +259,6 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     @Override
     public UserVo loginByCode(String email, String code) throws BusinessException{
-        //校验用户邮箱
-
-
-
         //校验验证码
         String rightcode = (String) redisUtil.get(EmailConstant.login + email);
         if(!code.equals(rightcode))

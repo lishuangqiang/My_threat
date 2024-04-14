@@ -20,9 +20,9 @@ import java.util.List;
 public class AdminThreatServiceImpl implements AdminThreatService {
 
     @Resource
-    public ThreatMapper threatMapper;
+    private ThreatMapper threatMapper;
     @Resource
-    public FilmMapper filmMapper;
+    private FilmMapper filmMapper;
 
     /**
      * 展现剧院所有上映电影
@@ -64,6 +64,11 @@ public class AdminThreatServiceImpl implements AdminThreatService {
 
     }
 
+    /**
+     * 删除电影
+     * @param threatDto
+     * @throws BusinessException
+     */
     @Override
     public void delFilm(ThreatDto threatDto) throws BusinessException {
         //检查当前电影是否存在
@@ -71,8 +76,6 @@ public class AdminThreatServiceImpl implements AdminThreatService {
         {
             throw new BusinessException(ErrorCode.FILM_NOT_EXIST);
         }
-
-
         int id = threatDto.getPlayingMovieId();
         //判断删除结果
         if(threatMapper.deletemovieByid(id) == Boolean.FALSE)

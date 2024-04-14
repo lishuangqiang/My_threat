@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
@@ -23,7 +24,7 @@ import java.util.List;
 @RequestMapping("/admin/film")
 @Api(tags = "管理员管理电影相关接口")
 public class adminFilmController {
-    @Autowired
+    @Resource
     private AdminFilmServiceImpl adminFilmService;
 
 
