@@ -38,4 +38,11 @@ public class Order {
      * 用户订单二维码
      */
     public String orderQrcodeUrl;
+
+    /**
+     * 下单用户id
+     */
+    public  int id;
+
+    private static final long serialVersionUID = 1L;
 }

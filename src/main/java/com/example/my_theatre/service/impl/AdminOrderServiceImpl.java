@@ -1,20 +1,22 @@
 package com.example.my_theatre.service.impl;
 
+import com.example.my_theatre.config.RedissonConfig;
 import com.example.my_theatre.context.BaseContext;
+import com.example.my_theatre.config.RedisConfig;
 import com.example.my_theatre.entity.enums.ErrorCode;
 import com.example.my_theatre.entity.po.Applyorder;
 import com.example.my_theatre.entity.po.Threat;
 import com.example.my_theatre.entity.vo.OrderVo;
 import com.example.my_theatre.exception.BusinessException;
-import com.example.my_theatre.mapper.ApplyorderMapper;
-import com.example.my_theatre.mapper.OrderMapper;
-import com.example.my_theatre.mapper.SetMapper;
-import com.example.my_theatre.mapper.ThreatMapper;
+import com.example.my_theatre.mapper.*;
 import com.example.my_theatre.service.AdminOrderService;
 import com.example.my_theatre.utils.AliOssUtil;
 import com.example.my_theatre.utils.OrderIdUtil;
 import com.google.zxing.WriterException;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +25,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
@@ -37,7 +40,12 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     private SetMapper setMapper;
     @Resource
     private ApplyorderMapper applyorderMapper;
+    @Resource
+    private FilmMapper filmMapper;
 
+
+    @Resource
+    private RedissonClient redissonClient;
 
     /**
      * 分页查询所有订单
@@ -71,11 +79,15 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
     /**
-     * 管理员端下单
+     * 管理端下单（存在线程安全问题）
+     * @param playmovieId
+     * @param x_set
+     * @param y_set
+     * @return
+     * @throws IOException
+     * @throws WriterException
+     * @throws BusinessException
      */
-    //todo
-    //添加锁防止并发，不要直接加重量级锁
-    //表设计有问题，后续需要更改。
     @Transactional(rollbackFor = Exception.class)
     @Override
     public String createOrderByAdmin(int playmovieId, int x_set, int y_set) throws IOException, WriterException, BusinessException {
@@ -85,52 +97,68 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             throw new BusinessException(ErrorCode.THREAT_IS_NULL);
         }
 
+        RLock lock = redissonClient.getLock("createOrderLock");
+        try {
+            // 尝试加锁，最多等待3秒
+            boolean locked = lock.tryLock(3, TimeUnit.SECONDS);
+            if (!locked) {
+                throw new BusinessException(ErrorCode.SYSTEM_ERROR);
+            }
+            if (threat.getSealSit() >= threat.getSumSeat()) { // 座位已满时回滚事务
+                throw new BusinessException(ErrorCode.SET_IS_FULL);
+            }
 
-        if (threat.getSealSit() == threat.getSumSeat()) {
-            log.info("座位已满");
-            throw new BusinessException(ErrorCode.SET_IS_FULL);
-        }
-        // 检查当前座位是否有人
-        if (setMapper.select(x_set, y_set) == Boolean.TRUE) {
-            throw new BusinessException(ErrorCode.SET_IS_USED);
-        }
+            // 获取当前场次电影的信息
+            String movieName = threat.getMovieName();
 
-        // 获取当前场次电影的信息
-        String movieName = threat.getMovieName();
+            // 生成订单id
+            String orderId = OrderIdUtil.getUUID();
 
-        // 生成订单id
-        String orderId = OrderIdUtil.getUUID();
+            // 订单用户（这里记录管理员的id）
+            String orderUser = String.valueOf(BaseContext.getCurrentId());
 
-        // 订单用户（这里记录管理员的id）
-        String orderUser = String.valueOf(BaseContext.getCurrentId());
+            // 订单状态
+            int orderStatus = 1;
 
-        // 订单状态
-        int orderStatus = 1;
+            // 将基本信息存储到HashMap中
+            HashMap<String, Object> orderInfo = new HashMap<>();
+            orderInfo.put("movieName", movieName);
+            orderInfo.put("orderId", orderId);
+            orderInfo.put("orderUser", orderUser);
+            orderInfo.put("orderStatus", orderStatus);
 
-        // 将基本信息存储到HashMap中
-        HashMap<String, Object> orderInfo = new HashMap<>();
-        orderInfo.put("movieName", movieName);
-        orderInfo.put("orderId", orderId);
-        orderInfo.put("orderUser", orderUser);
-        orderInfo.put("orderStatus", orderStatus);
+            // 生成二维码并且上传至阿里云oss
+            String QRcodeUrl = aliOssUtil.CreateQRandUpload(orderInfo);
 
-        // 生成二维码并且上传至阿里云oss
-        String QRcodeUrl = aliOssUtil.CreateQRandUpload(orderInfo);
+            // 向数据库插入订单信息
+            orderMapper.insertOrder(orderId, playmovieId, movieName, orderUser, orderStatus, QRcodeUrl);
 
-        // 向数据库插入订单信息
-        if (orderMapper.insertOrder(orderId, playmovieId, movieName, orderUser, orderStatus, QRcodeUrl) == Boolean.FALSE) {
+            // 订单创建成功之后扣减库存
+            threatMapper.updatesealsit(playmovieId);
+
+            // 更新电影的票房纪录
+            filmMapper.updateTicket();
+
+            // 将座位写入列表中
+            setMapper.insertSet(x_set, y_set, movieName, playmovieId);
+
+            // 释放锁
+            lock.unlock();
+
+            // 返回订单二维码
+            return QRcodeUrl;
+
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new BusinessException(ErrorCode.SYSTEM_ERROR);
+        } finally {
+            // 确保在发生异常时也能释放锁
+            if (lock.isLocked() && lock.isHeldByCurrentThread()) {
+                lock.unlock();
+            }
         }
-
-        // 订单创建成功之后扣减库存
-        threatMapper.updatesealsit(playmovieId);
-
-        // 将座位写入列表中
-        setMapper.insertSet(x_set, y_set, movieName, playmovieId);
-
-        // 返回订单二维码
-        return QRcodeUrl;
     }
+
 
     /**
      * 分页查询退单表

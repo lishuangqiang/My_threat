@@ -30,4 +30,6 @@ public class SetDTO  implements Serializable {
      * 电影开始时间
      */
     String playMovieId;
+
+    private static final long serialVersionUID = 1L;
 }

@@ -44,7 +44,7 @@ public class AdminAccountServiceImpl implements AdminAccountService {
         Admin admin = adminMapper.selectByAccount(account);
         //进行密码比对
         if (!admin.getAdminPassword().equals(AdminintoPassword)) {
-            throw new BusinessException(ErrorCode.PASSWPRD_ERROR, "用户密码不正确，请重新输入或获取");
+            throw new BusinessException(ErrorCode.PASSWPRD_ERROR, "管理员密码不正确，请重新输入或获取");
         }
 
         //写入token
@@ -71,7 +71,7 @@ public class AdminAccountServiceImpl implements AdminAccountService {
      * @param adminDto
      */
     @Override
-    public void addAdmin(AdminDto adminDto) {
+    public void addAdmin(AdminDto adminDto) throws BusinessException {
         //检查是否为管理员操作
         String nowAccount = String.valueOf(BaseContext.getCurrentId());
         if (adminMapper.selectByAccount(nowAccount )==null) {
@@ -98,7 +98,7 @@ public class AdminAccountServiceImpl implements AdminAccountService {
      * @param adminDto
      */
     @Override
-    public void delAdmin(AdminDto adminDto) {
+    public void delAdmin(AdminDto adminDto) throws BusinessException{
         //检查是否为管理员操作
         String nowAccount = String.valueOf(BaseContext.getCurrentId());
         if (adminMapper.selectByAccount(nowAccount )==null) {
@@ -122,7 +122,7 @@ public class AdminAccountServiceImpl implements AdminAccountService {
      * @return
      */
     @Override
-    public List<Admin> findall() {
+    public List<Admin> findall() throws BusinessException{
         //检查是否为管理员操作
         String nowAccount = String.valueOf(BaseContext.getCurrentId());
         if (adminMapper.selectByAccount(nowAccount) == null) {

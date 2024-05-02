@@ -29,4 +29,6 @@ public class SetVo {
      * 电影开始时间
      */
     String playMovieId;
+
+    private static final long serialVersionUID = 1L;
 }

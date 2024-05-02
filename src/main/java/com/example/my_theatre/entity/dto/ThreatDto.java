@@ -37,4 +37,6 @@ public class ThreatDto  implements Serializable {
      */
     public String moviePicture;
 
+    private static final long serialVersionUID = 1L;
+
 }

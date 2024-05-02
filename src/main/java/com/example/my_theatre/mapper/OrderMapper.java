@@ -26,4 +26,6 @@ public interface OrderMapper extends BaseMapper<Order> {
     List<OrderVo> getuserorderBypage(Map<String, Integer> params, String userAccount);
 
     Order selectByorderId(String orderId);
+
+    List<OrderVo> selectOrderByPageandName(Map<String, Integer> params, Long currentId, String filename);
 }

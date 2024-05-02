@@ -28,4 +28,6 @@ public class ApplyorderDto implements Serializable {
      * 申请原因
      */
     String applyReason;
+
+    private static final long serialVersionUID = 1L;
 }

@@ -40,4 +40,6 @@ public class Threat {
      * 已经售出座位
      */
     public int sealSit;
+
+    private static final long serialVersionUID = 1L;
 }

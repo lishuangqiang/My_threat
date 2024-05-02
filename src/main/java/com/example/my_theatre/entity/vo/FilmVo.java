@@ -39,4 +39,6 @@ public class FilmVo {
      * 电影上映年份
      */
     public String movieYear;
+
+    private static final long serialVersionUID = 1L;
 }

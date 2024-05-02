@@ -26,13 +26,16 @@
         SELECT * FROM my_threate.order_table LIMIT #{start}, #{size}
     </select>
     <select id="selectOrderByPage" resultType="com.example.my_theatre.entity.vo.OrderVo">
-        SELECT * FROM my_threate.order_table LIMIT #{start}, #{size}
+        SELECT * FROM my_threate.order_table  LIMIT #{start}, #{size}
     </select>
     <select id="getuserorderBypage" resultType="com.example.my_theatre.entity.vo.OrderVo">
         SELECT * FROM my_threate.order_table where order_user = #{userAccount} LIMIT #{start}, #{size}
     </select>
     <select id="selectByorderId" resultType="com.example.my_theatre.entity.po.Order">
         SELECT * from order_table where order_id = #{orderId}
+    </select>
+    <select id="selectOrderByPageandName" resultType="com.example.my_theatre.entity.vo.OrderVo">
+        SELECT * FROM my_threate.order_table LIMIT #{start}, #{size}
     </select>
 
 </mapper>

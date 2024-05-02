@@ -31,4 +31,6 @@ public class ThreatVo {
      * 电影名称
      */
     public String moviePicture;
+
+    private static final long serialVersionUID = 1L;
 }

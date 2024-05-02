@@ -1,4 +1,4 @@
-package com.example.my_theatre.entity.config;
+package com.example.my_theatre.config;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;

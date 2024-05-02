@@ -35,4 +35,6 @@ public class OrderVo {
      */
     public String orderQrcodeUrl;
 
+    private static final long serialVersionUID = 1L;
+
 }

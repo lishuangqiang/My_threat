@@ -22,4 +22,6 @@ public interface FilmMapper extends BaseMapper<Film> {
     List<FilmVo> selectFilmsByPage(Map<String, Integer> params);
 
     Boolean selectBymovieName(String movieName);
+
+    void updateTicket();
 }

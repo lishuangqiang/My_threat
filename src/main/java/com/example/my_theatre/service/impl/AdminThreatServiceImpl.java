@@ -8,6 +8,7 @@ import com.example.my_theatre.exception.BusinessException;
 import com.example.my_theatre.mapper.FilmMapper;
 import com.example.my_theatre.mapper.ThreatMapper;
 import com.example.my_theatre.service.AdminThreatService;
+import com.example.my_theatre.utils.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,8 @@ public class AdminThreatServiceImpl implements AdminThreatService {
     private ThreatMapper threatMapper;
     @Resource
     private FilmMapper filmMapper;
+    @Resource
+    private RedisUtil redisUtil;
 
     /**
      * 展现剧院所有上映电影
@@ -61,6 +64,8 @@ public class AdminThreatServiceImpl implements AdminThreatService {
         {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
+
+        redisUtil.set(movieName+"_stock", 63);
 
     }
 

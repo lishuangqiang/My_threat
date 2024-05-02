@@ -59,8 +59,29 @@ public class UserOrderServiceImpl implements UserOrderService {
     }
 
     /**
-     * 查询当前用户的所有订单
+     * 根据名称在订单表中查询所有数据
+     * //todo 存在bug，用户查询条件有问题
      * @param currentId
+     * @param page
+     * @param size
+     * @param filename
+     * @return
+     */
+    @Override
+    public List<OrderVo> getAllOrderByname(Long currentId, int page, int size, String filename) {
+        int start = (page - 1) * size;
+        Map<String, Integer> params = new HashMap<>();
+        params.put("start", start);
+        params.put("size", size);
+        return orderMapper.selectOrderByPageandName(params,currentId,filename);
+    }
+
+    /**
+     * 查询当前用户所有订单
+     * @param currentId
+     * @param page
+     * @param size
+     * @return
      */
     @Override
     public List<OrderVo> getAllOrder(Long currentId, int page, int size) {
@@ -70,4 +91,6 @@ public class UserOrderServiceImpl implements UserOrderService {
         params.put("size", size);
         return orderMapper.selectOrderByPage(params,currentId);
     }
+
+
 }

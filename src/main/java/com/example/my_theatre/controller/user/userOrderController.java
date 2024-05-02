@@ -6,6 +6,7 @@ import com.example.my_theatre.context.BaseContext;
 import com.example.my_theatre.entity.po.Order;
 import com.example.my_theatre.entity.vo.OrderVo;
 import com.example.my_theatre.exception.BusinessException;
+import com.example.my_theatre.mapper.UserMapper;
 import com.example.my_theatre.service.UserOrderService;
 import com.example.my_theatre.service.impl.UserOrderServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -40,14 +41,34 @@ public class userOrderController {
     }
 
     /**
-     * 用户查询自己的所有订单
+     * 用户查询自己的历史订单
+     * @param page
+     * @param size
+     * @return
      */
     @GetMapping("/allOrder")
     public BaseResponse<List<OrderVo>> getAllOrder(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
-        log.info("当前用户正在尝试查看自己的所有订单");
+        log.info("当前用户正在尝试查看自己的所有订单，用户账号为：" + BaseContext.getCurrentId());
         List<OrderVo> list;
         try {
             list = userOrderService.getAllOrder(BaseContext.getCurrentId(), page, size);
+        } catch (BusinessException e) {
+            return ResultUtils.error(e.getCode(), e.getMessage());
+        }
+        return ResultUtils.success(list);
+    }
+    /**
+     * 用户根据电影名查询自己的历史订单
+     */
+    @GetMapping("/allOrderByname")
+    public BaseResponse<List<OrderVo>> getAllOrderByname(@RequestParam(defaultValue = "1") int page,
+                                                         @RequestParam(defaultValue = "10") int size,
+                                                         @RequestParam String filename)
+     {
+        log.info("当前用户正在尝试查看自己的所有订单，用户账号为：" + BaseContext.getCurrentId());
+        List<OrderVo> list;
+        try {
+            list = userOrderService.getAllOrderByname(BaseContext.getCurrentId(), page, size,filename);
         } catch (BusinessException e) {
             return ResultUtils.error(e.getCode(), e.getMessage());
         }

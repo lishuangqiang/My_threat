@@ -89,7 +89,7 @@ public class adminAccountController {
      */
     @GetMapping("/findAll")
     public BaseResponse<List<Admin>> findAll() {
-        log.info("查询所有管理员");
+        log.info("当前管理员尝试查询所有管理员，管理员账号为："+BaseContext.getCurrentId());
         List<Admin> listadmins = null;
         try {
             listadmins = adminAccountService.findall();

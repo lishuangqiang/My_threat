@@ -42,10 +42,14 @@ public class adminFilmController {
      */
     @PostMapping("/addFilm")
     public BaseResponse<String> addFilm(MultipartFile moviePicture,
-                                        String movieName, String leadingActor
-                                        , int movieTime, String movieCountry, String movieType
-                                        , String movieYear) {
+                                        String movieName,
+                                        String leadingActor,
+                                         int movieTime,
+                                        String movieCountry,
+                                        String movieType,
+                                        String movieYear) {
         log.info("当前管理员" + BaseContext.getCurrentId() + "正在上传电影：" + movieName);
+        //构造电影实体类
         FilmDto film = new FilmDto();
         film.setMovieName(movieName);
         film.setLeadingActor(leadingActor);
