@@ -43,5 +43,16 @@ public class FilmDto implements Serializable {
      */
     public String movieYear;
 
+    /**
+     * 电影评分人数
+     */
+    public int  ratingNumber;
+
+    /**
+     * 电影总分
+     */
+    public int ratingSum;
+
+
     private static final long serialVersionUID = 1L;
 }

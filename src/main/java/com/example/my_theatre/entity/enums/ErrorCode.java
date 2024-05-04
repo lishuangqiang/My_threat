@@ -31,7 +31,8 @@ public enum ErrorCode {
     SET_IS_FULL(50015,"当前场次已满员" ),
     SET_IS_USED(50016,"当前座位已经售出" ),
     CANCEL_ORDER_FAIL(50017,"删除订单失败" ),
-    ORDER_NOT_EXIST(50018,"订单不存在" );
+    ORDER_NOT_EXIST(50018,"订单不存在" ),
+    NULL_COMMENT(50019,"非法评论，请输入合法内容" );
 
 
     /**

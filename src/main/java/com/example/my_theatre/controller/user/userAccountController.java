@@ -21,7 +21,7 @@ import javax.annotation.Resource;
 @RequestMapping("/user/account")
 public class userAccountController {
     @Resource
-    UserAccountServiceImpl userAccountService;
+    private UserAccountServiceImpl userAccountService;
 
     /**
      * 发送验证码  0：注册 1：找回 2： 注销 3：登录

@@ -65,7 +65,6 @@ public class AdminThreatServiceImpl implements AdminThreatService {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
 
-        redisUtil.set(movieName+"_stock", 63);
 
     }
 

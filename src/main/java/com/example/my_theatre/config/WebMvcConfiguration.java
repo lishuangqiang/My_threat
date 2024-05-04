@@ -45,14 +45,14 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
      */
     protected void addInterceptors(InterceptorRegistry registry) {
         log.info("开始注册自定义拦截器...");
-        registry.addInterceptor(jwtTokenUserInterceptor)
+/*        registry.addInterceptor(jwtTokenUserInterceptor)
                 .addPathPatterns("/user/**")
                 //排除以下路径：用户登录，用户注册，用户找回密码，发送验证码
                 .excludePathPatterns("/user/account/sendEmailCode")
                 .excludePathPatterns("/user/account/register")
                 .excludePathPatterns("/user/account/forgetPassword")
                 .excludePathPatterns("/user/account/login")
-                .excludePathPatterns("/user/account/loginByCode");
+                .excludePathPatterns("/user/account/loginByCode");*/
 
 
 //        //todo(取消管理员拦截器)
