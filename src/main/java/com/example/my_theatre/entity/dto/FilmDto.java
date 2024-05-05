@@ -53,6 +53,11 @@ public class FilmDto implements Serializable {
      */
     public int ratingSum;
 
+    /**
+     * 电影状态
+     */
+    public int movieStatus;
+
 
     private static final long serialVersionUID = 1L;
 }

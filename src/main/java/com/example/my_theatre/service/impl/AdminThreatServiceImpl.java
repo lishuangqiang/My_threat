@@ -1,6 +1,4 @@
 package com.example.my_theatre.service.impl;
-
-import com.example.my_theatre.context.BaseContext;
 import com.example.my_theatre.entity.dto.ThreatDto;
 import com.example.my_theatre.entity.enums.ErrorCode;
 import com.example.my_theatre.entity.vo.ThreatVo;
@@ -11,6 +9,7 @@ import com.example.my_theatre.service.AdminThreatService;
 import com.example.my_theatre.utils.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
@@ -27,6 +26,7 @@ public class AdminThreatServiceImpl implements AdminThreatService {
     @Resource
     private RedisUtil redisUtil;
 
+
     /**
      * 展现剧院所有上映电影
      * @return
@@ -42,6 +42,7 @@ public class AdminThreatServiceImpl implements AdminThreatService {
      * 上映电影
      * @param threatDto
      */
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void addFilm(ThreatDto threatDto) throws BusinessException {
         //检查当前电影是否存在：
@@ -64,12 +65,20 @@ public class AdminThreatServiceImpl implements AdminThreatService {
         {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
+        int status =2;
+        //如果插入成功，更新电影状态
+        if(filmMapper.setFilmStatusByid(movieId,status) == Boolean.FALSE)
+        {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        //更新缓存
+        redisUtil.set("movie_"+movieId,threatDto);
 
 
     }
 
     /**
-     * 删除电影
+     * 下映电影
      * @param threatDto
      * @throws BusinessException
      */

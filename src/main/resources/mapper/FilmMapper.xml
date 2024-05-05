@@ -6,7 +6,7 @@
 
     <insert id="addfilm">
     insert into my_threate.movie_table( movie_name, leading_actor,movie_picture,
-     movie_time, number_ticket, movie_country, movie_type, movie_year)
+     movie_time, number_ticket, movie_country, movie_type, movie_year,movie_status)
     VALUES(
            #{movieName},
            #{leadingActor},
@@ -15,7 +15,8 @@
            #{movieTicket},
            #{movieCountry},
            #{movieType},
-           #{movieYear}
+           #{movieYear},
+           #{movieStatus}
           )
 
     </insert>
@@ -24,6 +25,18 @@
         SET number_ticket = number_ticket + 1;
 
     </update>
+    <update id="setFilmStatus">
+        UPDATE my_threate.movie_table
+        SET movie_status = #{movieStatus}
+        WHERE movie_name = #{movieName}
+    </update>
+    <update id="setFilmStatusByid">
+        UPDATE my_threate.movie_table
+        SET movie_status = #{movieStatus}
+        WHERE movie_id = #{movieId}
+
+    </update>
+
     <delete id="delFilm">
         delete  from my_threate.movie_table where movie_name=#{movieName}
     </delete>
@@ -45,5 +58,15 @@
             WHERE movie_name = #{movieName}
             LIMIT 1
         )
+    </select>
+    <select id="getlittleStartMovie" resultType="com.example.my_theatre.entity.vo.FilmVo">
+        select  * from my_threate.movie_table where  movie_status = 2
+        limit  0,8
+    </select>
+    <select id="getlittleWaitStartMovie" resultType="com.example.my_theatre.entity.vo.FilmVo">
+        select * from my_threate.movie_table where  movie_status =1
+    </select>
+    <select id="getBoxRanking" resultType="com.example.my_theatre.entity.vo.FilmVo">
+        select  * from my_threate.movie_table where movie_status=2  order by number_ticket desc limit 0,5
     </select>
 </mapper>

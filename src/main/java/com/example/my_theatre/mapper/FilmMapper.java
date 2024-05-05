@@ -11,7 +11,7 @@ import java.util.Map;
 
 public interface FilmMapper extends BaseMapper<Film> {
 
-    Boolean addfilm(String movieName, String leadingActor,String filePath, String movieType, String movieYear, String movieCountry, int movieTime,int movieTicket);
+    Boolean addfilm(String movieName, String leadingActor,String filePath, String movieType, String movieYear, String movieCountry, int movieTime,int movieTicket,int movieStatus);
 
     void delFilm(String movieName);
 
@@ -24,4 +24,15 @@ public interface FilmMapper extends BaseMapper<Film> {
     Boolean selectBymovieName(String movieName);
 
     void updateTicket();
+
+    boolean setFilmStatus(String movieName, int movieStatus);
+
+
+    boolean setFilmStatusByid(int movieId, int status);
+
+    List<FilmVo> getlittleStartMovie();
+
+    List<FilmVo> getlittleWaitStartMovie();
+
+    List<FilmVo> getBoxRanking();
 }

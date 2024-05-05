@@ -13,6 +13,7 @@ import com.example.my_theatre.utils.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -37,6 +38,7 @@ public class AdminFilmServiceImpl implements AdminFilmService {
      * @param film
      * @throws BusinessException
      */
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void addfilm(MultipartFile file,FilmDto film) throws BusinessException {
         log.info("当前管理员正在添加电影："+film.getMovieName()+"管理员id为："+ BaseContext.getCurrentId());
@@ -46,6 +48,7 @@ public class AdminFilmServiceImpl implements AdminFilmService {
         String movieType =  film.getMovieType();
         String movieYear =  film.getMovieYear();
         String movieCountry =  film.getMovieCountry();
+        int movieStatus = film.getMovieStatus();
         int movieTime=  film.getMovieTime();
 
         //检查数据库中是否已经添加过相同的电影：
@@ -57,7 +60,7 @@ public class AdminFilmServiceImpl implements AdminFilmService {
         String filePath = aliOssUtil.upload(file);
         //写入数据库
         if(filmMapper.addfilm(movieName,leadingActor,filePath,
-                movieType,movieYear,movieCountry, movieTime,0)==Boolean.FALSE)
+                movieType,movieYear,movieCountry, movieTime,0,movieStatus)==Boolean.FALSE)
         {
             throw  new BusinessException(ErrorCode.FILM_FAIL, "电影保存失败");
         }
@@ -83,6 +86,7 @@ public class AdminFilmServiceImpl implements AdminFilmService {
     public List<FilmVo> allFilm() {
         return filmMapper.allFilm();
     }
+
 
     /**
      * 查询热门电影(票房前十)
@@ -120,4 +124,25 @@ public class AdminFilmServiceImpl implements AdminFilmService {
             params.put("size", size);
             return filmMapper.selectFilmsByPage(params);
     }
+
+    @Override
+    public void setFilmStatus(FilmDto filmDto) {
+        log.info("当前管理员正在修改电影状态："+filmDto.getMovieName()+"管理员id为："+ BaseContext.getCurrentId());
+        //获取前端所有字段。
+        String movieName = filmDto.getMovieName();
+        int movieStatus = filmDto.getMovieStatus();
+        //检查数据库中是否已经添加过相同的电影：
+        if(filmMapper.selectBymovieName(movieName)==Boolean.FALSE)
+        {
+            throw new BusinessException(ErrorCode.FILM_FAIL,"禁止修改不存在的电影");
+        }
+        //写入数据库
+        if(filmMapper.setFilmStatus(movieName,movieStatus)==Boolean.FALSE)
+        {
+            throw  new BusinessException(ErrorCode.FILM_FAIL, "电影状态修改失败");
+        }
+
+    }
+
+
 }

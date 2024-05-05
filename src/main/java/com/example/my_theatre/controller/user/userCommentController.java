@@ -2,18 +2,13 @@ package com.example.my_theatre.controller.user;
 
 import com.example.my_theatre.common.BaseResponse;
 import com.example.my_theatre.common.ResultUtils;
-import com.example.my_theatre.context.BaseContext;
 import com.example.my_theatre.entity.dto.CommentDto;
 import com.example.my_theatre.entity.enums.ErrorCode;
-import com.example.my_theatre.entity.vo.CommentVo;
-import com.example.my_theatre.exception.BusinessException;
 import com.example.my_theatre.service.impl.UserCommentServiceImpl;
-import com.example.my_theatre.utils.VerifyRegexUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * 用户评论相关接口

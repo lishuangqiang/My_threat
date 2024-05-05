@@ -47,7 +47,8 @@ public class adminFilmController {
                                          int movieTime,
                                         String movieCountry,
                                         String movieType,
-                                        String movieYear) {
+                                        String movieYear,
+                                        int movieStatus) {
         log.info("当前管理员" + BaseContext.getCurrentId() + "正在上传电影：" + movieName);
         //构造电影实体类
         FilmDto film = new FilmDto();
@@ -57,6 +58,7 @@ public class adminFilmController {
         film.setMovieCountry(movieCountry);
         film.setMovieType(movieType);
         film.setMovieYear(movieYear);
+        film.setMovieStatus(movieStatus);
         try {
             adminFilmService.addfilm(moviePicture, film);
 
@@ -104,6 +106,19 @@ public class adminFilmController {
         return ResultUtils.success(films);
     }
 
+    /**
+     * 设置电影状态
+     */
+    @PostMapping("/setFilmStatus")
+    public BaseResponse<String> setFilmStatus(@RequestBody FilmDto filmDto) {
+        log.info("当前管理员正在设置电影状态");
+        try {
+            adminFilmService.setFilmStatus(filmDto);
+        } catch (BusinessException e) {
+            return ResultUtils.error(e.getCode(), e.getMessage());
+        }
+        return ResultUtils.success("设置成功");
+    }
 
 }
 

@@ -18,4 +18,6 @@ public interface AdminFilmService {
     List<FilmVo> getHotFilms();
 
     List<FilmVo> allFilmByPage(int page, int size);
+
+    void setFilmStatus(FilmDto filmDto);
 }

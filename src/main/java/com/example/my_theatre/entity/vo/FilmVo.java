@@ -50,6 +50,17 @@ public class FilmVo {
      */
     public int ratingSum;
 
+    /**
+     * 总售票数量
+     */
+    public int numberTicket;
+
+
+    /**
+     * 电影状态
+     */
+    public int movieStatus;
+
 
     private static final long serialVersionUID = 1L;
 }
