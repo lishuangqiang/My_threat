@@ -35,6 +35,8 @@ public class commonController {
     public List<FilmVo> getlittleWaitStartMovie(){
         return commonService.getlittleWaitStartMovie();
     }
+
+
     /**
      * 查询票房前八
      */

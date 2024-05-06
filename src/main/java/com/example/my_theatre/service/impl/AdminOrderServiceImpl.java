@@ -18,7 +18,13 @@ import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
+
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -42,6 +48,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     private ApplyorderMapper applyorderMapper;
     @Resource
     private FilmMapper filmMapper;
+    @Autowired
+    private PlatformTransactionManager transactionManager;
 
 
     @Resource
@@ -88,7 +96,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
      * @throws WriterException
      * @throws BusinessException
      */
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     @Override
     public String createOrderByAdmin(int playmovieId, int x_set, int y_set) throws IOException, WriterException, BusinessException {
         // 查询当前场次的movie
@@ -105,6 +113,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                 throw new BusinessException(ErrorCode.SYSTEM_ERROR);
             }
             if (threat.getSealSit() >= threat.getSumSeat()) { // 座位已满时回滚事务
+                log.info("座位已满");
                 throw new BusinessException(ErrorCode.SET_IS_FULL);
             }
 
@@ -130,20 +139,35 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             // 生成二维码并且上传至阿里云oss
             String QRcodeUrl = aliOssUtil.CreateQRandUpload(orderInfo);
 
-            // 向数据库插入订单信息
-            orderMapper.insertOrder(orderId, playmovieId, movieName, orderUser, orderStatus, QRcodeUrl);
+            // 开启数据库事务
+            DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+            def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+            TransactionStatus status = transactionManager.getTransaction(def);
 
-            // 订单创建成功之后扣减库存
-            threatMapper.updatesealsit(playmovieId);
+            try {
+                // 向数据库插入订单信息
+                orderMapper.insertOrder(orderId, playmovieId, movieName, orderUser, orderStatus, QRcodeUrl);
 
-            // 更新电影的票房纪录
-            filmMapper.updateTicket();
+                // 订单创建成功之后扣减库存
+                threatMapper.updatesealsit(playmovieId);
 
-            // 将座位写入列表中
-            setMapper.insertSet(x_set, y_set, movieName, playmovieId);
+                // 更新电影的票房纪录
+                filmMapper.updateTicket();
 
-            // 释放锁
-            lock.unlock();
+                // 将座位写入列表中
+                setMapper.insertSet(x_set, y_set, movieName, playmovieId);
+
+                // 提交事务
+                transactionManager.commit(status);
+
+            } catch (Exception e) {
+                // 回滚事务
+                transactionManager.rollback(status);
+                throw new BusinessException(ErrorCode.SYSTEM_ERROR);
+            } finally {
+                // 释放锁
+                lock.unlock();
+            }
 
             // 返回订单二维码
             return QRcodeUrl;
@@ -158,6 +182,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             }
         }
     }
+
 
 
     /**
