@@ -49,23 +49,36 @@ public class UserAccountServiceImpl implements UserAccountService {
      * 发送验证码
      * @param email
      * @param type
-     * @throws MessagingException
      */
     @Override
-    public void sendEmailCode(String email, String type) throws MessagingException {
+    public void sendEmailCode(String email, String type) throws BusinessException {
         //生成随机数，调用私有方法sendEmailCode进行发送
         String code = StringTools.getRandomNumber(Constants.LENGTH_5);
-        sendEmailCode(email, code, type);
+
         //存入Reids,设置过期时间为五分钟
+        //存入Redis之前，先对类型进行校验，如果不是注册类型，就要先检查用户邮箱是否存在
+        if (!type.equals(EmailConstant.regiser)) {
+          if(userMapper.findUserByemail(email) == null)
+          {
+              System.out.println("此邮箱未注册,请先注册");
+              throw new BusinessException(ErrorCode.EMAIL_ERROR, "此邮箱未注册,请先注册");
+          }
+        }
+        //调用私有方法来发送验证码
+        sendEmailCode(email, code, type);
+        //存入Redis
         if (type.equals(EmailConstant.regiser)) {
+            //用户注册
             redisUtil.set(EmailConstant.regiser + email, code, 60 * 5);
         } else if (type.equals(EmailConstant.forget)) {
+            //用户找回密码
             redisUtil.set(EmailConstant.forget + email, code, 60 * 5);
         } else if (type.equals(EmailConstant.logout)) {
+            //用户注销
             redisUtil.set(EmailConstant.logout + email, code, 60 * 5);
         } else if (type.equals(EmailConstant.login)) {
+            //用户登录
             redisUtil.set(EmailConstant.login + email, code, 60 * 5);
-
         }
 
     }

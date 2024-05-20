@@ -9,8 +9,6 @@ public interface UserMapper extends BaseMapper<User> {
 
     User findUserByemail(String email);
 
-
-
     void register(User user);
 
     void deleteUserByEmail(String email);

@@ -8,7 +8,6 @@ import java.util.List;
 public interface AdminMapper extends BaseMapper<Admin> {
     Admin selectByAccount(String account);
 
-
     void addAdmin(String adminAccount, String adminName, String adminPassword);
 
     void delAdmin(String adminAccount);

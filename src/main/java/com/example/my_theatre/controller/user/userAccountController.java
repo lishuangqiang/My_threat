@@ -40,8 +40,8 @@ public class userAccountController {
         }
         try {
             userAccountService.sendEmailCode(email, type);
-        } catch (Exception e) {
-            return ResultUtils.error(ErrorCode.SYSTEM_ERROR, "系统内部出错，邮箱发送失败");
+        } catch (BusinessException e) {
+            return ResultUtils.error(e.getCode(), e.getMessage());
         }
         return ResultUtils.success("验证码发送成功");
 

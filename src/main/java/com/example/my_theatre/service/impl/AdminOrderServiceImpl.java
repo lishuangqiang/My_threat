@@ -113,9 +113,10 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                 throw new BusinessException(ErrorCode.SYSTEM_ERROR);
             }
             if (threat.getSealSit() >= threat.getSumSeat()) { // 座位已满时回滚事务
-                log.info("座位已满");
+
                 throw new BusinessException(ErrorCode.SET_IS_FULL);
             }
+
 
             // 获取当前场次电影的信息
             String movieName = threat.getMovieName();

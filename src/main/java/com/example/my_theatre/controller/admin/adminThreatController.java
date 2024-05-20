@@ -78,6 +78,22 @@ public class adminThreatController {
         }
         return ResultUtils.success("下映成功");
     }
+    /**
+     * 更新电影
+     * todo
+     */
+//    @PostMapping("/updateFillm")
+//    public BaseResponse<String>updateFillm(@RequestBody ThreatDto threatDto)
+//    {
+//        log.info("当前管理员正在尝试更新  电影");
+//        if (threatDto == null) {
+//            return ResultUtils.error(ErrorCode.PARAMS_ERROR);
+//        }
+//        try {
+//            adminThreatService.updateFilm(threatDto);
+//        }
+//
+//    }
 }
 
 
